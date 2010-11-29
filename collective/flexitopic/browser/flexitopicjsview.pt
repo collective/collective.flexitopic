@@ -1,0 +1,62 @@
+<script type="text/javascript" tal:content="structure view/get_js">
+
+ $(document).ready(function() {
+   $('#flexitopicsearchform').find('select').each(function(i) {
+     $(this).change(function( objEvent ){
+         $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
+        }) ;
+   });
+ });
+
+
+
+    $("#flexitopicresults").flexigrid
+            (
+            {
+            url: '@@flexijson_view',
+            dataType: 'json',
+            colModel : [
+                {display: 'Title', name : 'Title', width : 220, sortable : true, align: 'left'},
+                {display: 'Project type', name : 'getProject_type', width : 100, sortable : true, align: 'left'},
+                {display: 'Implementing agencies', name : 'getAgencies', width : 220, sortable : true, align: 'left'},
+                {display: 'Region', name : 'getSubRegions', width : 200, sortable : true, align: 'left'},
+                {display: 'Status', name : 'getProject_status', width : 100, sortable : true, align: 'left'}
+                ],
+            sortname: 'Title',
+            sortorder: 'asc',
+            usepager: true,
+            title: 'Projects',
+            useRp: true,
+            rp: 15,
+            showTableToggleBtn: true,
+            width: 900,
+            onSubmit: addFormData,
+            height: 200
+            }
+            );
+
+
+    /*This function adds paramaters to the post of flexigrid.
+    You can add a verification as well by return to false if
+    you don't want flexigrid to submit function addFormData() */
+    function addFormData() {
+        /*passing a form object to serializeArray will get the valid data
+        from all the objects, but, if the you pass a non-form object,
+        you have to specify the input elements that the data will come from */
+        var dt = $('#flexitopicsearchform').serializeArray();
+        $("#flexitopicresults").flexOptions({params: dt});
+        return true;
+    }
+
+
+$('#flexitopicsearchform').submit
+(
+    function ()
+        {
+            $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
+            return false;
+        }
+);
+
+
+</script>

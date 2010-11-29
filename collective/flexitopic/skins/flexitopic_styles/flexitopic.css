@@ -1,0 +1,17 @@
+
+/*#flexitopicsearchform label {display:block;} */
+
+#flexitopicsearchform div {
+  display:inline-block;
+  margin:0 10px 10px 0;
+  *display:inline;
+  zoom:1;
+}
+
+#flexitopicsearchform div.formHelp {
+  display: none;
+}
+
+#flexitopicsearchform input.searchButton {
+clear: both;
+}

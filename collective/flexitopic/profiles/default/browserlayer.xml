@@ -1,0 +1,6 @@
+<layers>
+ <layer
+     name="collective.flexitopic"
+     interface="collective.flexitopic.interfaces.IAddOnInstalled"
+     />
+</layers>

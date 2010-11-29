@@ -1,0 +1,40 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="collective.flexitopic">
+    <!-- -*- extra stuff goes here -*- -->
+
+
+
+
+  <!--browser:viewlet
+      for="Products.ATContentTypes.interfaces.topic.IATTopic"
+      name="flexitopic.js.viewlet"
+      manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
+      layer="collective.flexitopic.interfaces.IAddOnInstalled"
+      class=".flexitopicjsview.FlexiTopicJsView"
+      permission="zope.Public"
+      view="plone.app.layout.globals.interfaces.IViewView"
+      template="flexitopicjsview.pt"
+      /-->
+
+
+  <browser:page
+      for="Products.ATContentTypes.interfaces.topic.IATTopic"
+      name="flexijson_view"
+      class=".flexijsonview.FlexiJsonView"
+      allowed_interface=".flexijsonview.IFlexiJsonView"
+      permission="zope.Public"
+      />
+
+
+  <browser:page
+      for="Products.ATContentTypes.interfaces.topic.IATTopic"
+      name="flexitopic_view"
+      class=".flexitopicview.FlexiTopicView"
+      template="flexitopicview.pt"
+      allowed_interface=".flexitopicview.IFlexiTopicView"
+      permission="zope.Public"
+      />
+
+</configure>
