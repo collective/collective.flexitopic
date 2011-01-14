@@ -6,7 +6,7 @@ from plone.app.layout.viewlets import common as base
 
 from collective.flexitopic import flexitopicMessageFactory as _
 
-from utils import IDX_METADATA, get_topic_table_fields
+from utils import IDX_METADATA, COLUMN_WIDTH, get_topic_table_fields
 
 class IFlexiTopicJsView(Interface):
     """

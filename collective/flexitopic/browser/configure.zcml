@@ -5,8 +5,6 @@
     <!-- -*- extra stuff goes here -*- -->
 
 
-
-
   <!--browser:viewlet
       for="Products.ATContentTypes.interfaces.topic.IATTopic"
       name="flexitopic.js.viewlet"
@@ -17,6 +15,16 @@
       view="plone.app.layout.globals.interfaces.IViewView"
       template="flexitopicjsview.pt"
       /-->
+
+  <browser:menuItem
+      title="Flexi Topic View"
+      for="Products.ATContentTypes.interface.IATTopic"
+      menu="plone_displayviews"
+      action="flexitopic_view"
+      description="Set Flexitopic as default view."
+      />
+
+
 
 
   <browser:page

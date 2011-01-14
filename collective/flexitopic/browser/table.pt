@@ -19,9 +19,11 @@
     </caption>
     <thead>
         <tr>
-          <th tal:repeat="th fields">
-            <span tal:replace="th/label" />
-          </th>
+          <tal:loop tal:repeat="th fields">
+              <th tal:attributes="style string:width: ${th/col_width}px;;">
+                <span tal:replace="th/label" />
+              </th>
+          </tal:loop>
         </tr>
     </thead>
     <tfoot tal:define="batch python:Batch(results, b_size, int(b_start), orphan=1);">

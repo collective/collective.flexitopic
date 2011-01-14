@@ -61,18 +61,26 @@ class FlexiJsonView(BrowserView):
             "total":len(results),
             "rows":[]}
         fields = get_topic_table_fields(self.context, self.portal_catalog)
-        a = '<a href="%s" title="%s">%s %s</a>'
+        a = u'<a href="%s" title="%s">%s %s</a>'
         layout = getMultiAdapter((self.context, self.request), name=u'plone_layout')
         for result in results[start:end]:
             cell = []
             icon = layout.getIcon(result)
             if icon.url:
-                icon_snp = '<img src="%s" alt="%s" title="%s" width="%i" height="%i" />'%(
+                icon_snp = u'<img src="%s" alt="%s" title="%s" width="%i" height="%i" />'%(
                     icon.url, icon.description, icon.title, icon.width, icon.height)
             else:
                 icon_snp = ''
             for field in fields:
                 value = getattr(result, field['name'])
+                if type(value)==tuple:
+                    vt =[]
+                    for v in value:
+                        v = v.decode('utf-8', 'ignore').encode('ascii', 'xmlcharrefreplace')
+                        vt.append(v)
+                    value = vt
+                else:
+                    value = value.decode('utf-8', 'ignore').encode('ascii', 'xmlcharrefreplace')
                 if value==None:
                     cell.append('')
                 elif field['idx_type'] == 'DateIndex':
@@ -82,7 +90,8 @@ class FlexiJsonView(BrowserView):
                             request=self.request)
                     cell.append(dateval)
                 elif field['name']=='Title':
-                    cell.append(a % (result.getURL(), result.Description,
+                    cell.append(a % (result.getURL(),
+                        result.Description.decode('utf-8', 'ignore').encode('ascii', 'xmlcharrefreplace'),
                         icon_snp, value))
                 elif type(value)==tuple:
                     cell.append(', '.join(getattr(result, field['name'])))

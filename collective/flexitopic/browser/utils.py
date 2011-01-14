@@ -2,6 +2,8 @@
 
 from Products.CMFCore.utils import getToolByName
 
+COLUMN_WIDTH = 900
+
 IDX_METADATA = {
         'Title': 'sortable_title',
         'ExpirationDate': 'expires',
@@ -14,6 +16,7 @@ def get_topic_table_fields(context, catalog):
     fields = context.getCustomViewFields()
     field_list =[]
     vocab = context.listMetaDataFields(False)
+    col_width = int(COLUMN_WIDTH/len(fields))
     for field in fields:
         if field in IDX_METADATA.keys():
             idx = catalog.Indexes[IDX_METADATA[field]].meta_type
@@ -22,7 +25,8 @@ def get_topic_table_fields(context, catalog):
         else:
             idx = None
         name = vocab.getValue(field, field)
-        field_list.append({'name': field, 'label': name, 'idx_type': idx})
+        field_list.append({'name': field, 'label': name, 'idx_type': idx,
+                            'col_width': col_width})
     return field_list
 
 
@@ -54,8 +58,9 @@ def get_search_results(flexitopic):
             else:
                 assert(criterion.meta_type=='ATSimpleStringCriterion')
                 if criterion.Value():
-                    query[criterion.Field()] = criterion.Value() + \
-                        ' AND ' + value
+                    query[criterion.Field()] =  { 'query':
+                                [criterion.Value(), value],
+                                'operator':'and'}
                 else:
                     query[criterion.Field()] = value
         else:
