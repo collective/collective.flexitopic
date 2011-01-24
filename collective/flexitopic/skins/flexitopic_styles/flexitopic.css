@@ -4,8 +4,16 @@
 #flexitopicsearchform div {
   display:inline-block;
   margin:0 10px 10px 0;
-  *display:inline;
   zoom:1;
+}
+
+#flexitopicsearchform div.jslider-bg {
+  display:block;
+  margin:0;
+}
+
+#flexitopicsearchform span.jslider {
+    margin-top: 1em;
 }
 
 #flexitopicsearchform div.formHelp {

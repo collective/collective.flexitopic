@@ -8,8 +8,9 @@ from Products.CMFCore.utils import getToolByName
 from collective.flexitopic import flexitopicMessageFactory as _
 
 from utils import get_search_results, get_topic_table_fields
-from utils import IDX_METADATA
+from utils import IDX_METADATA, get_start_end
 
+from DateTime import DateTime
 
 KEYWORD_DELIMITER = ':'
 
@@ -121,6 +122,32 @@ $('#flexitopicsearchform').submit
         return stl
 
 
+    def _get_calculate_js(self, start_date):
+        js_ctemplate = '''
+                calculate: function( value ){
+                    var start_date = new Date('%(start)s');
+                    var the_date = datesliderhelper.add_date(start_date, value)
+                    return datesliderhelper.format_date(the_date);
+                }
+                '''
+        return js_ctemplate % { 'start': start_date.strftime('%Y/%m/%d')}
+
+    def _get_callback_js(self, name, start_date):
+        js_cbtemplate = '''
+                callback: function( value ){
+                    var values = value.split(';');
+                    var start_date = new Date('%(start)s');
+                    var start = datesliderhelper.add_date(start_date, values[0]);
+                    var end = datesliderhelper.add_date(start_date, values[1]);
+                    $('#start-search-%(name)s').val(datesliderhelper.format_date(start));
+                    $('#end-search-%(name)s').val(datesliderhelper.format_date(end));
+                    $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
+                }
+                '''
+        return js_cbtemplate % { 'start': start_date.strftime('%Y/%m/%d'),
+                                 'name': name
+                                }
+
 
     def _sel(self, item, selected):
         if item == selected:
@@ -146,11 +173,60 @@ $('#flexitopicsearchform').submit
         return get_topic_table_fields(self.context, self.portal_catalog)
 
     def get_criteria(self):
+        ''' combine request with topic criteria '''
+        def daterange_criterion(criterion):
+            date_diff = int(end_date - start_date) + 1
+            i_start = int(DateTime(startval) - start_date)
+            i_end = int(DateTime(endval) - start_date)
+            valrange = '%i;%i' % (i_start, i_end)
+            calc_template = self._get_calculate_js(start_date)
+            cb_template = self._get_callback_js(criterion.Field(),
+                        start_date)
+            return '''
+                <span id="search-%(id)s">
+                    <input type=text"
+                        size="10"
+                        name="start-%(name)s"
+                        id="start-search-%(id)s"
+                        value="%(startval)s" />
+                        -
+                    <input type=text"
+                        size="10"
+                        name="end-%(name)s"
+                        id="end-search-%(id)s"
+                        value="%(endval)s" />
+                    <input id="slider-%(id)s"
+                        type="slider"
+                        style="display:none;"
+                        name="range-%(name)s"
+                        value="%(valrange)s" />
+
+                    <script type="text/javascript" charset="utf-8">
+                      jQuery("#slider-%(id)s").slider({
+                            from: 0,
+                            to: %(to)i,
+                            %(calculate)s,
+                            %(callback)s
+                            });
+                    </script>
+
+                </span>
+            ''' % { 'id': criterion.Field(),
+                    'name': criterion.Field(),
+                    'startval' : startval,
+                    'endval': endval,
+                    'valrange': valrange,
+                    'to': date_diff,
+                    'calculate': calc_template,
+                    'callback': cb_template}
+
+
         criteria = []
         portal_atct = getToolByName(self.context,'portal_atct')
         for criterion in self.context.listCriteria():
             if criterion.meta_type in ['ATSimpleStringCriterion',
-                'ATSelectionCriterion', 'ATListCriterion']:
+                'ATSelectionCriterion', 'ATListCriterion',
+                'ATDateRangeCriterion', 'ATFriendlyDateCriteria']:
                 index = portal_atct.getIndex(criterion.Field())
                 criterion_field = {'id': criterion.id,
                     'description': index.description,
@@ -223,7 +299,16 @@ $('#flexitopicsearchform').submit
                             %s
                             </select>''' % ( criterion.Field(),
                                 criterion.Field(), options)
+                elif criterion.meta_type in ['ATDateRangeCriterion',
+                                            'ATFriendlyDateCriteria']:
+                    start_date, end_date = get_start_end(self, criterion,
+                                                self.portal_catalog)
+                    startval = self.request.get('start-' + criterion.Field(),
+                            start_date.strftime('%Y/%m/%d'))
+                    endval = self.request.get('end-' + criterion.Field(),
+                            end_date.strftime('%Y/%m/%d'))
 
+                    criterion_field['input'] = daterange_criterion(criterion)
                 else:
                     criterion_field['input'] = None
                 criteria.append(criterion_field)

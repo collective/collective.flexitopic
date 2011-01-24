@@ -5,4 +5,14 @@
     enabled="True" expression="" id="flexigrid.pack.js" inline="False"/>
  <javascript cacheable="False" compression="safe" cookable="True"
     enabled="False" expression="" id="flexigrid.js" inline="False"/>
+
+ <javascript cacheable="True" compression="safe" cookable="True"
+    enabled="True" expression="" id="jquery.dependClass.js" inline="False"/>
+ <javascript cacheable="True" compression="safe" cookable="True"
+    enabled="True" expression="" id="jquery.slider-min.js" inline="False"/>
+ <javascript cacheable="False" compression="safe" cookable="True"
+    enabled="False" expression="" id="jquery.slider.js" inline="False"/>
+
+ <javascript cacheable="True" compression="safe" cookable="True"
+    enabled="True" expression="" id="datesliderhelperfunctions.js" inline="False"/>
 </object>

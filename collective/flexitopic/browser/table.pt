@@ -20,7 +20,8 @@
     <thead>
         <tr>
           <tal:loop tal:repeat="th fields">
-              <th tal:attributes="style string:width: ${th/col_width}px;;">
+              <!--th tal:attributes="style string:width: ${th/col_width}px;;"-->
+              <th>
                 <span tal:replace="th/label" />
               </th>
           </tal:loop>

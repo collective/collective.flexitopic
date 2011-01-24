@@ -6,4 +6,7 @@
  <stylesheet title="" cacheable="True" compression="safe" cookable="True"
     enabled="1" expression="" id="flexitopic.css"
     media="screen" rel="stylesheet" rendering="import"/>
+ <stylesheet title="" cacheable="True" compression="safe" cookable="True"
+    enabled="1" expression="" id="jslider.css"
+    media="screen" rel="stylesheet" rendering="import"/>
 </object>

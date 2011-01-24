@@ -1,6 +1,7 @@
 #utils
 
 from Products.CMFCore.utils import getToolByName
+from DateTime import DateTime
 
 COLUMN_WIDTH = 900
 
@@ -10,6 +11,38 @@ IDX_METADATA = {
         'ModificationDate': 'modified',
         'EffectiveDate': 'effective',
         'CreationDate': 'created'}
+
+
+def get_date_limit(context, criterion, portal_catalog):
+    query = context.buildQuery()
+    query['sort_on'] = criterion.Field()
+    query['sort_limit'] = 1
+    if criterion.getOperation() == 'less':
+        query['sort_order'] = 'ascending'
+        adjust = -1
+    else:
+        query['sort_order'] = 'descending'
+        adjust = 1
+    query.pop(criterion.Field())
+    results = portal_catalog(**query)
+    if len(results) > 0:
+        date_limit = results[0][criterion.Field()] + adjust
+    else:
+        date_limit = None
+    return date_limit
+
+def get_start_end(flexitopic, criterion, catalog):
+    if criterion.meta_type in ['ATDateRangeCriterion']:
+        start_date = criterion.getStart()
+        end_date = criterion.getEnd()
+    elif criterion.meta_type in ['ATFriendlyDateCriteria']:
+        date_base = criterion.getCriteriaItems()[0][1]['query']
+        date_limit = get_date_limit(flexitopic.context, criterion,
+                                    catalog)
+        start_date = min(date_base, date_limit)
+        end_date =  max(date_base, date_limit)
+    return start_date, end_date
+
 
 
 def get_topic_table_fields(context, catalog):
@@ -38,7 +71,15 @@ def get_search_results(flexitopic):
     catalog = flexitopic.portal_catalog
     query = {}
     for criterion in flexitopic.context.listCriteria():
-        value = flexitopic.request.get(criterion.Field(),None)
+        if criterion.meta_type in ['ATDateRangeCriterion',
+                                    'ATFriendlyDateCriteria']:
+            start_date, end_date = get_start_end(flexitopic, criterion, catalog)
+            value = (flexitopic.request.get('start-' + criterion.Field(),
+                            start_date.strftime('%Y/%m/%d')),
+                    flexitopic.request.get('end-' + criterion.Field(),
+                            end_date.strftime('%Y/%m/%d')))
+        else:
+            value = flexitopic.request.get(criterion.Field(),None)
         if value:
             query[criterion.Field()] = {}
             if hasattr(criterion, 'getOperator'):
@@ -56,13 +97,21 @@ def get_search_results(flexitopic):
                 query[criterion.Field()] = { 'query':[q],
                     'operator':'and'}
             else:
-                assert(criterion.meta_type=='ATSimpleStringCriterion')
-                if criterion.Value():
-                    query[criterion.Field()] =  { 'query':
-                                [criterion.Value(), value],
-                                'operator':'and'}
+                if criterion.meta_type in ['ATDateRangeCriterion',
+                            'ATFriendlyDateCriteria']:
+                    start = DateTime(value[0])
+                    end = DateTime(value[1])
+                    query[criterion.Field()] = {'query':(start, end),
+                                'range': 'min:max'}
+
                 else:
-                    query[criterion.Field()] = value
+                    assert(criterion.meta_type=='ATSimpleStringCriterion')
+                    if criterion.Value():
+                        query[criterion.Field()] =  { 'query':
+                                    [criterion.Value(), value],
+                                    'operator':'and'}
+                    else:
+                        query[criterion.Field()] = value
         else:
             if criterion.getCriteriaItems():
                 if criterion.meta_type in ['ATSortCriterion',]:
