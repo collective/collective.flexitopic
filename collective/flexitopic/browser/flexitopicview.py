@@ -27,6 +27,8 @@ class FlexiTopicView(BrowserView):
     """
     implements(IFlexiTopicView)
 
+    add_form_data_js ='//%s'
+
     js_template = """
  $(document).ready(function() {
    $('#flexitopicsearchform').find('select').each(function(i) {
@@ -59,6 +61,7 @@ class FlexiTopicView(BrowserView):
     function addFormData() {
         var dt = $('#flexitopicsearchform').serializeArray();
         $("#flexitopicresults").flexOptions({params: dt});
+        %(add_js)s;
         return true;
     }
 
@@ -301,6 +304,9 @@ $('#flexitopicsearchform').submit
                                 criterion.Field(), options)
                 elif criterion.meta_type in ['ATDateRangeCriterion',
                                             'ATFriendlyDateCriteria']:
+                    # convert freindly date criteria into date ranges
+                    # so we can display a slider to drill down inside
+                    # the range
                     start_date, end_date = get_start_end(self, criterion,
                                                 self.portal_catalog)
                     startval = self.request.get('start-' + criterion.Field(),
@@ -357,6 +363,7 @@ $('#flexitopicsearchform').submit
         table_name = self.context.Title()
         url = self.context.absolute_url() + '/@@flexijson_view'
         items_ppage = self.context.getLimitNumber()
+        add_form_data_js = self.add_form_data_js % self.context.absolute_url()
         if items_ppage==0:
             items_ppage = 15
         js = self.js_template % {
@@ -364,8 +371,8 @@ $('#flexitopicsearchform').submit
                 'col_model': ', '.join(tl),
                 'sort': sort,
                 'title': table_name,
-                'items_ppage': items_ppage
-
+                'items_ppage': items_ppage,
+                'add_js': add_form_data_js
             }
         return js
 

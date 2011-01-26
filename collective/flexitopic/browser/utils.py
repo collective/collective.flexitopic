@@ -14,6 +14,11 @@ IDX_METADATA = {
 
 
 def get_date_limit(context, criterion, portal_catalog):
+    '''
+    get the earliest/latest date that should be included in
+    a daterange covering all dates defined by the criteria
+    '''
+    # XXX this has to be cached
     query = context.buildQuery()
     query['sort_on'] = criterion.Field()
     query['sort_limit'] = 1
