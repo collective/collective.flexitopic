@@ -8,6 +8,6 @@ var datesliderhelper  = {
     add_date: function(adate, days){
             var day = 1000*60*60*24;
             var new_date = new Date(adate.getTime() + (days * day));
-            return new_date
+            return new_date;
     }
-}
+};

@@ -63,16 +63,13 @@ class FlexiTopicView(BrowserView):
         $("#flexitopicresults").flexOptions({params: dt});
         %(add_js)s;
         return true;
-    }
+    };
 
-$('#flexitopicsearchform').submit
-(
-    function ()
-        {
-            $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
-            return false;
-        }
-);
+    $('#flexitopicsearchform').submit(function (){
+                $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
+                return false;
+            }
+    );
 
 
         """
@@ -129,10 +126,9 @@ $('#flexitopicsearchform').submit
         js_ctemplate = '''
                 calculate: function( value ){
                     var start_date = new Date('%(start)s');
-                    var the_date = datesliderhelper.add_date(start_date, value)
+                    var the_date = datesliderhelper.add_date(start_date, value);
                     return datesliderhelper.format_date(the_date);
-                }
-                '''
+                }'''
         return js_ctemplate % { 'start': start_date.strftime('%Y/%m/%d')}
 
     def _get_callback_js(self, name, start_date):
@@ -145,8 +141,7 @@ $('#flexitopicsearchform').submit
                     $('#start-search-%(name)s').val(datesliderhelper.format_date(start));
                     $('#end-search-%(name)s').val(datesliderhelper.format_date(end));
                     $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
-                }
-                '''
+                }'''
         return js_cbtemplate % { 'start': start_date.strftime('%Y/%m/%d'),
                                  'name': name
                                 }
