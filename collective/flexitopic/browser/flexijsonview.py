@@ -1,5 +1,6 @@
-from zope.interface import implements, Interface
+from types import StringTypes
 
+from zope.interface import implements, Interface
 from zope.component import getMultiAdapter
 
 import logging
@@ -79,7 +80,7 @@ class FlexiJsonView(BrowserView):
                         v = v.decode('utf-8', 'ignore').encode('ascii', 'xmlcharrefreplace')
                         vt.append(v)
                     value = vt
-                else:
+                elif type(value) in StringTypes:
                     value = value.decode('utf-8', 'ignore').encode('ascii', 'xmlcharrefreplace')
                 if value==None:
                     cell.append('')
