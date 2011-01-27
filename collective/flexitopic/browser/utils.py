@@ -1,9 +1,11 @@
 #utils
-
 from Products.CMFCore.utils import getToolByName
 from DateTime import DateTime
+from plone.memoize import ram
+from time import time
 
 COLUMN_WIDTH = 900
+RAM_CACHE_SECONDS = 3600
 
 IDX_METADATA = {
         'Title': 'sortable_title',
@@ -12,13 +14,24 @@ IDX_METADATA = {
         'EffectiveDate': 'effective',
         'CreationDate': 'created'}
 
+def _datelimit_cachekey(fun, context, criterion, portal_catalog):
+    query = context.buildQuery()
+    query.pop(criterion.Field(),None)
+    ckey = list(context.getPhysicalPath())
+    for dcriterion in context.listCriteria():
+        if dcriterion.meta_type in ['ATFriendlyDateCriteria']:
+            query.pop(criterion.Field(),None)
+    ckey.append(query)
+    ckey.append(criterion.Field())
+    ckey.append(time() // RAM_CACHE_SECONDS)
+    return ckey
 
+@ram.cache(_datelimit_cachekey)
 def get_date_limit(context, criterion, portal_catalog):
     '''
     get the earliest/latest date that should be included in
     a daterange covering all dates defined by the criteria
     '''
-    # XXX this has to be cached
     query = context.buildQuery()
     query['sort_on'] = criterion.Field()
     query['sort_limit'] = 1
@@ -68,6 +81,14 @@ def get_topic_table_fields(context, catalog):
     return field_list
 
 
+def _search_result_cachekey(fun, flexitopic):
+    ckey = [flexitopic.request.form]
+    ckey.append(flexitopic.context.getPhysicalPath())
+    ckey.append(time() // RAM_CACHE_SECONDS)
+    return ckey
+
+
+@ram.cache(_search_result_cachekey)
 def get_search_results(flexitopic):
     form = flexitopic.request.form
 
