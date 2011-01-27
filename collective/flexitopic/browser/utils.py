@@ -4,7 +4,10 @@ from DateTime import DateTime
 from plone.memoize import ram
 from time import time
 
-COLUMN_WIDTH = 900
+from zope.component import getUtility
+from plone.registry.interfaces import IRegistry
+from collective.flexitopic.interfaces import IFlexiTopicSettings
+
 RAM_CACHE_SECONDS = 3600
 
 IDX_METADATA = {
@@ -65,9 +68,11 @@ def get_start_end(flexitopic, criterion, catalog):
 
 def get_topic_table_fields(context, catalog):
     fields = context.getCustomViewFields()
+    registry = getUtility(IRegistry)
+    settings = registry.forInterface(IFlexiTopicSettings)
     field_list =[]
     vocab = context.listMetaDataFields(False)
-    col_width = int(COLUMN_WIDTH/len(fields))
+    col_width = int(settings.flexitopic_width/len(fields))
     for field in fields:
         if field in IDX_METADATA.keys():
             idx = catalog.Indexes[IDX_METADATA[field]].meta_type

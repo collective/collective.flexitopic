@@ -1,10 +1,13 @@
 from zope.interface import implements, Interface
+from zope.component import getUtility
 
 from Products.Five import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from Products.CMFCore.utils import getToolByName
+from plone.registry.interfaces import IRegistry
 
+from collective.flexitopic.interfaces import IFlexiTopicSettings
 from collective.flexitopic import flexitopicMessageFactory as _
 
 from utils import get_search_results, get_topic_table_fields
@@ -52,9 +55,9 @@ class FlexiTopicView(BrowserView):
             useRp: true,
             rp: %(items_ppage)i,
             showTableToggleBtn: true,
-            width: 900,
+            width: %(width)i,
             onSubmit: addFormData,
-            height: 200
+            height: %(height)i
             }
             );
 
@@ -335,8 +338,11 @@ class FlexiTopicView(BrowserView):
             return False
 
         fields = get_topic_table_fields(self.context, self.portal_catalog)
-        width=900
-        field_width=int(900/len(fields))
+        registry = getUtility(IRegistry)
+        settings = registry.forInterface(IFlexiTopicSettings)
+        width=settings.flexitopic_width
+        height=settings.flexitopic_height
+        field_width=int(width/len(fields))
         t = "{display: '%s', name : '%s', width : %i, sortable : %s, align: 'left'}"
         tl = []
         for field in fields:
@@ -367,7 +373,9 @@ class FlexiTopicView(BrowserView):
                 'sort': sort,
                 'title': table_name,
                 'items_ppage': items_ppage,
-                'add_js': add_form_data_js
+                'add_js': add_form_data_js,
+                'width': width,
+                'height': height,
             }
         return js
 

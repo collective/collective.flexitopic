@@ -18,7 +18,7 @@
   <!-- -*- extra stuff goes here -*- -->
 
   <include package=".browser" />
-
+  <include package="plone.app.registry" />
 
   <i18n:registerTranslations directory="locales" />
 
@@ -27,5 +27,6 @@
   <cmf:registerDirectory name="flexitopic_images" recursive="True" />
   <cmf:registerDirectory name="flexitopic_styles"/>
   <cmf:registerDirectory name="flexitopic_js"/>
+
 
 </configure>

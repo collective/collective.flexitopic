@@ -4,18 +4,6 @@
     i18n_domain="collective.flexitopic">
     <!-- -*- extra stuff goes here -*- -->
 
-
-  <!--browser:viewlet
-      for="Products.ATContentTypes.interfaces.topic.IATTopic"
-      name="flexitopic.js.viewlet"
-      manager="plone.app.layout.viewlets.interfaces.IHtmlHead"
-      layer="collective.flexitopic.interfaces.IAddOnInstalled"
-      class=".flexitopicjsview.FlexiTopicJsView"
-      permission="zope.Public"
-      view="plone.app.layout.globals.interfaces.IViewView"
-      template="flexitopicjsview.pt"
-      /-->
-
   <browser:menuItem
       title="Flexi Topic View"
       for="Products.ATContentTypes.interface.IATTopic"
@@ -44,5 +32,16 @@
       allowed_interface=".flexitopicview.IFlexiTopicView"
       permission="zope.Public"
       />
+
+    <include package="plone.app.registry" />
+
+    <!-- Control panel -->
+    <browser:page
+        name="flexitopic-settings"
+        for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+        class=".controlpanel.FlexiTopicControlPanel"
+        permission="cmf.ManagePortal"
+        />
+
 
 </configure>
