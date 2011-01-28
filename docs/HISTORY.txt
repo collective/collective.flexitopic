@@ -1,7 +1,16 @@
 Changelog
 =========
 
+0.1
+---
+
+- First public release
+  Add slider to query for date ranges
+  Caching for expensive catalog queries
+
 0.1dev (unreleased)
 -------------------
 
 - Initial release
+  Flexigrid to display search results
+  Generate search form from collection criteria

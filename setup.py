@@ -5,7 +5,7 @@ version = '0.1'
 
 setup(name='collective.flexitopic',
       version=version,
-      description="Collective Flexigrid Collection",
+      description="Searchable Collections with Flexigrid",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from
@@ -13,11 +13,14 @@ setup(name='collective.flexitopic',
       classifiers=[
         "Framework :: Plone",
         "Programming Language :: Python",
+        "Development Status :: 4 - Beta",
+        "License :: OSI Approved :: GNU General Public License (GPL)",
+
         ],
       keywords='',
-      author='',
-      author_email='',
-      url='http://svn.plone.org/svn/collective/',
+      author='Christian Ledermann',
+      author_email='christian.ledermann@gmail.com',
+      url='http://plone.org/products/collective.flexitopic',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['collective'],
