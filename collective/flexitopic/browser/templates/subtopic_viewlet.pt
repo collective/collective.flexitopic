@@ -1,0 +1,11 @@
+<tal:subtopics condition="here/hasSubtopics|nothing"
+       define="topics view/get_subtopics">
+  <tal:loop tal:repeat="topic topics">
+    <dt tal:content="topic/title" tal:attributes="id string:fieldsetlegend-${topic/id}"> Subtopic title</dt>
+    <dd tal:attributes="id string:fieldset-${topic/id}">
+       <div tal:content="topic/description"> Description </div>
+       <span tal:replace="structure python:view.render_table(topic)"></span>
+       <div tal:content="structure topic/text"> Body Text </div>
+    </dd>
+  </tal:loop>
+</tal:subtopics>

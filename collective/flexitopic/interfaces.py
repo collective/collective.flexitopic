@@ -5,8 +5,9 @@ from zope import schema
 
 from zope.i18nmessageid import MessageFactory
 from plone.theme.interfaces import IDefaultPloneLayer
+from browser.interfaces import *
 
-_ = MessageFactory('collective.akismet')
+_ = MessageFactory('collective.flexitopic')
 
 class IFlexiTopicLayer(IDefaultPloneLayer):
     """Marker interface that defines a Zope 3 browser layer.

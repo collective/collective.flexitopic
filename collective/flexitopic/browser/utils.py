@@ -1,10 +1,10 @@
 #utils
-from Products.CMFCore.utils import getToolByName
+from zope.component import getUtility
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from DateTime import DateTime
 from plone.memoize import ram
 from time import time
 
-from zope.component import getUtility
 from plone.registry.interfaces import IRegistry
 from collective.flexitopic.interfaces import IFlexiTopicSettings
 
@@ -66,6 +66,14 @@ def get_start_end(flexitopic, criterion, catalog):
 
 
 
+def get_renderd_table(context, search_results):
+    """ Render results table
+
+    @return: Resulting HTML code as Python string
+    """
+    table_template = ViewPageTemplateFile("templates/table.pt")
+    return table_template(context, search_results=search_results)
+
 def get_topic_table_fields(context, catalog):
     fields = context.getCustomViewFields()
     registry = getUtility(IRegistry)
@@ -122,7 +130,8 @@ def get_search_results(flexitopic):
             else:
                 operator = None
             if operator =='or':
-                query[criterion.Field()] = [value]
+                query[criterion.Field()] = { 'query':[value],
+                    'operator':'or'}
             elif operator == 'and':
                 q = list(criterion.Value()) + [value]
                 query[criterion.Field()] = { 'query':[q],
@@ -176,7 +185,6 @@ def get_search_results(flexitopic):
         query['sort_on'] = sort_on
         if sort_order:
             query['sort_order'] = sort_order
-
 
     results = catalog(**query)
 

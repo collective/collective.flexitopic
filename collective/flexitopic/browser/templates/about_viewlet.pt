@@ -1,0 +1,6 @@
+<dt id="fieldsetlegend-about-projects">About</dt>
+<dd id="fieldset-about-projects">
+  <div class="documentDescription"
+    tal:content="here/Description">
+  </div>
+</dd>

@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 <object>
-    <order manager="plone.htmlhead">
-        <viewlet name="flexitopic.js.viewlet" />
+    <order manager="collective.flexitopic.top">
+        <viewlet name="collective.flexitopic.about" />
+        <viewlet name="collective.flexitopic.subtopics" />
+    </order>
+    <order manager="collective.flexitopic.form" skinname="*">
+        <viewlet name="collective.flexitopic.searchform" />
+    </order>
+    <order manager="collective.flexitopic.bottom" skinname="*">
+        <viewlet name="collective.flexitopic.flexigrid" />
+        <viewlet name="collective.flexitopic.resulttable" />
+    </order>
+    <order manager="collective.flexitopic.javascript" skinname="*">
+        <viewlet name="collective.flexitopic.defaultjs" />
     </order>
 </object>

@@ -1,0 +1,25 @@
+<form id="flexitopicsearchform" name="search" method="get" class="enableAutoFocus" action="@@flexitopic_view">
+  <fieldset>
+    <legend>Search</legend>
+    <tal:loop tal:repeat="criterion view/get_criteria">
+        <div class="field even"
+            tal:define="oddrow repeat/criterion/odd;"
+            tal:attributes="class python:oddrow and 'field even' or 'field odd'">
+            <label i18n:translate="" tal:content="criterion/label"
+                tal:attributes="for criterion/field">Field name</label>
+            <div class="formHelp" i18n:translate="" tal:content="criterion/description">
+            help description
+            </div>
+            <div  tal:replace="structure criterion/input" />
+        </div>
+
+
+
+    </tal:loop>
+    <div class="formControls even">
+        <input type="submit" value="Search" name="submit"
+            class="searchButton"
+            i18n:attributes="value label_search;"/>
+    </div>
+  </fieldset>
+</form>

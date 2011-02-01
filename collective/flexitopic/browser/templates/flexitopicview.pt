@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      lang="en"
+      metal:use-macro="here/main_template/macros/master"
+      i18n:domain="collective.flexitopic">
+<body>
+    <div metal:fill-slot="main">
+        <tal:main-macro metal:define-macro="main"
+                        tal:define="kssClassesView context/@@kss_field_decorator_view;
+                            getKssClasses nocall:kssClassesView/getKssClassesInlineEditable;
+                            templateId template/getId">
+            <div tal:replace="structure provider:plone.abovecontenttitle" />
+            <h1 class="documentFirstHeading" tal:content="context/Title">
+                Title
+            </h1>
+
+            <div tal:replace="structure provider:plone.belowcontenttitle" />
+            <dl class="enableFormTabbing" tal:define="toLocalizedTime nocall:context/@@plone/toLocalizedTime">
+                <div tal:replace="structure provider:collective.flexitopic.top" />
+            </dl>
+
+            <div tal:replace="structure provider:collective.flexitopic.form" />
+
+            <div tal:content="structure here/getText">
+            Body Text
+            </div>
+            <div tal:replace="structure provider:collective.flexitopic.bottom" />
+            <div tal:replace="structure provider:collective.flexitopic.javascript" />
+        </tal:main-macro>
+    </div>
+</body>
+</html>

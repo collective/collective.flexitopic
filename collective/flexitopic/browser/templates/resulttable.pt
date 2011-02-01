@@ -1,0 +1,5 @@
+<div tal:define="search_results view/search_results" tal:condition="search_results">
+    <noscript>
+        <span tal:replace="structure python:view.render_table(search_results)"></span>
+    </noscript>
+</div>

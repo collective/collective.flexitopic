@@ -1,5 +1,13 @@
 Changelog
 =========
+0.2
+---
+
+- do not display review state in searchform
+  split monolithic flexitopic_view into several viewlets
+  get items per page out of topic
+  render html table into a noscript area, flexigrid into an empty table
+
 
 0.1
 ---

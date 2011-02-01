@@ -1,8 +1,8 @@
 from types import StringTypes
 
-from zope.interface import implements, Interface
+from zope.interface import implements
 from zope.component import getMultiAdapter
-
+from interfaces import IFlexiJsonView
 import logging
 
 from Products.Five import BrowserView
@@ -13,16 +13,11 @@ try:
 except ImportError:
     import json
 
-from collective.flexitopic import flexitopicMessageFactory as _
 
 from utils import get_search_results, get_topic_table_fields
 
 logger = logging.getLogger('collective.flexitopic')
 
-class IFlexiJsonView(Interface):
-    """
-    FlexiJson view interface
-    """
 
 
 
