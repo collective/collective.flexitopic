@@ -20,7 +20,7 @@
       name="flexijson_view"
       class=".flexijsonview.FlexiJsonView"
       allowed_interface=".flexijsonview.IFlexiJsonView"
-      permission="zope.Public"
+      permission="zope2.View"
       />
 
 
@@ -30,7 +30,7 @@
       class=".flexitopicview.FlexiTopicView"
       template="templates/flexitopicview.pt"
       allowed_interface=".flexitopicview.IFlexiTopicView"
-      permission="zope.Public"
+      permission="zope2.View"
       />
 
     <include package="plone.app.registry" />
@@ -73,8 +73,11 @@
         class="plone.app.viewletmanager.manager.OrderedViewletManager"
         />
 
+
+
     <!-- viewlets -->
     <browser:viewlet
+        view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.about"
         manager=".interfaces.IFlexiTopicTop"
         layer="..interfaces.IFlexiTopicLayer"
@@ -84,6 +87,7 @@
         />
 
     <browser:viewlet
+        view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.subtopics"
         manager=".interfaces.IFlexiTopicTop"
         layer="..interfaces.IFlexiTopicLayer"
@@ -93,6 +97,7 @@
         />
 
     <browser:viewlet
+        view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.searchform"
         manager=".interfaces.IFlexiTopicForm"
         layer="..interfaces.IFlexiTopicLayer"
@@ -102,6 +107,7 @@
         />
 
     <browser:viewlet
+        view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.flexigrid"
         manager=".interfaces.IFlexiTopicBottom"
         layer="..interfaces.IFlexiTopicLayer"
@@ -111,6 +117,7 @@
         />
 
     <browser:viewlet
+        view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.resulttable"
         manager=".interfaces.IFlexiTopicBottom"
         layer="..interfaces.IFlexiTopicLayer"
@@ -118,14 +125,14 @@
         permission="zope2.View"
         template="templates/resulttable.pt"
         />
-
+    <!-- template="templates/jstemplate.pt" -->
     <browser:viewlet
+        view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.defaultjs"
         manager=".interfaces.IFlexiTopicJs"
         layer="..interfaces.IFlexiTopicLayer"
         class=".viewlets.JsViewlet"
         permission="zope2.View"
-        template="templates/jstemplate.pt"
         />
 
 </configure>

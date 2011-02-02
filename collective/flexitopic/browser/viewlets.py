@@ -1,5 +1,7 @@
 from DateTime import DateTime
 from zope.component import getUtility
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+
 from plone.app.layout.viewlets import common as base
 
 from Products.CMFCore.utils import getToolByName
@@ -14,15 +16,18 @@ from utils import IDX_METADATA, get_start_end, get_renderd_table
 KEYWORD_DELIMITER = ':'
 
 
-class AboutViewlet(base.ViewletBase):
-    ''' displays the description of a topic '''
-
-class SubtopicViewlet(base.ViewletBase):
-    ''' displays the subtopics of a topic '''
+class BaseViewlet(base.ViewletBase):
+    ''' a common base for the viewlets used here '''
 
     @property
     def portal_catalog(self):
         return getToolByName(self.context, 'portal_catalog')
+
+class AboutViewlet(BaseViewlet):
+    ''' displays the description of a topic '''
+
+class SubtopicViewlet(BaseViewlet):
+    ''' displays the subtopics of a topic '''
 
     def render_table(self, search_results):
         return get_renderd_table(self, search_results)
@@ -49,8 +54,37 @@ class SubtopicViewlet(base.ViewletBase):
 
         return stl
 
-class FormViewlet(base.ViewletBase):
+class FormViewlet(BaseViewlet):
     ''' displays the query form'''
+
+    @property
+    def portal_catalog(self):
+        return getToolByName(self.context, 'portal_catalog')
+
+    def _get_calculate_js(self, start_date):
+        js_ctemplate = '''
+                calculate: function( value ){
+                    var start_date = new Date('%(start)s');
+                    var the_date = datesliderhelper.add_date(start_date, value);
+                    return datesliderhelper.format_date(the_date);
+                }'''
+        return js_ctemplate % { 'start': start_date.strftime('%Y/%m/%d')}
+
+    def _get_callback_js(self, name, start_date):
+        js_cbtemplate = '''
+                callback: function( value ){
+                    var values = value.split(';');
+                    var start_date = new Date('%(start)s');
+                    var start = datesliderhelper.add_date(start_date, values[0]);
+                    var end = datesliderhelper.add_date(start_date, values[1]);
+                    $('#start-search-%(name)s').val(datesliderhelper.format_date(start));
+                    $('#end-search-%(name)s').val(datesliderhelper.format_date(end));
+                    $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
+                }'''
+        return js_cbtemplate % { 'start': start_date.strftime('%Y/%m/%d'),
+                                 'name': name
+                                }
+
 
     def _sel(self, item, selected):
         if item == selected:
@@ -221,15 +255,12 @@ class FormViewlet(base.ViewletBase):
         return criteria
 
 
-class FlexigridViewlet(base.ViewletBase):
+class FlexigridViewlet(BaseViewlet):
     ''' displays the flexigrid results'''
 
-class ResultTableViewlet(base.ViewletBase):
+class ResultTableViewlet(BaseViewlet):
     '''plain html results table '''
 
-    @property
-    def portal_catalog(self):
-        return getToolByName(self.context, 'portal_catalog')
 
     def get_table_fields(self):
         return get_topic_table_fields(self.context, self.portal_catalog)
@@ -244,8 +275,12 @@ class ResultTableViewlet(base.ViewletBase):
         results['display_legend'] = (results['num_results'] > 0)
         return results
 
-class JsViewlet(base.ViewletBase):
+class JsViewlet(BaseViewlet):
     ''' inserts the js to render the above viewlets '''
+
+
+    render = ViewPageTemplateFile("templates/jstemplate.pt")
+
 
     js_template = """
  $(document).ready(function() {
@@ -293,37 +328,6 @@ class JsViewlet(base.ViewletBase):
         """
 
     add_form_data_js ='//%s'
-
-
-    @property
-    def portal_catalog(self):
-        return getToolByName(self.context, 'portal_catalog')
-
-    def _get_calculate_js(self, start_date):
-        js_ctemplate = '''
-                calculate: function( value ){
-                    var start_date = new Date('%(start)s');
-                    var the_date = datesliderhelper.add_date(start_date, value);
-                    return datesliderhelper.format_date(the_date);
-                }'''
-        return js_ctemplate % { 'start': start_date.strftime('%Y/%m/%d')}
-
-    def _get_callback_js(self, name, start_date):
-        js_cbtemplate = '''
-                callback: function( value ){
-                    var values = value.split(';');
-                    var start_date = new Date('%(start)s');
-                    var start = datesliderhelper.add_date(start_date, values[0]);
-                    var end = datesliderhelper.add_date(start_date, values[1]);
-                    $('#start-search-%(name)s').val(datesliderhelper.format_date(start));
-                    $('#end-search-%(name)s').val(datesliderhelper.format_date(end));
-                    $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
-                }'''
-        return js_cbtemplate % { 'start': start_date.strftime('%Y/%m/%d'),
-                                 'name': name
-                                }
-
-
 
 
     def get_js(self):
@@ -377,5 +381,4 @@ class JsViewlet(base.ViewletBase):
                 'height': height,
             }
         return js
-
 
