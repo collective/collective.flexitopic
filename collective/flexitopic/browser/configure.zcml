@@ -4,6 +4,8 @@
     i18n_domain="collective.flexitopic">
     <!-- -*- extra stuff goes here -*- -->
 
+  <include package="plone.app.contentmenu" />
+
   <browser:menuItem
       title="Flexi Topic View"
       for="Products.ATContentTypes.interface.IATTopic"
