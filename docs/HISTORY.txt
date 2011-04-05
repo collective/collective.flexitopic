@@ -1,5 +1,12 @@
 Changelog
 =========
+
+0.2.1
+-----
+
+- pre-loading plone.app.contentmenu in browser/configure.zcml
+  in order to make Plone 4 happy
+
 0.2
 ---
 
