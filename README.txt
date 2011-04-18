@@ -62,3 +62,11 @@ buildout, by having a buildout configuration such as: ::
         ...
         eggs =
             collective.flexitopic
+
+
+
+
+- Code repository: https://svn.plone.org/svn/collective/collective.flexitopic/
+- Questions and comments to product-developers@lists.plone.org
+- Report bugs at http://plone.org/products/collective.flexitopic/issues
+

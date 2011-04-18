@@ -49,7 +49,7 @@ def get_date_limit(context, criterion, portal_catalog):
     if len(results) > 0:
         date_limit = results[0][criterion.Field()] + adjust
     else:
-        date_limit = None
+        date_limit = DateTime()
     return date_limit
 
 def get_start_end(flexitopic, criterion, catalog):
@@ -58,6 +58,8 @@ def get_start_end(flexitopic, criterion, catalog):
         end_date = criterion.getEnd()
     elif criterion.meta_type in ['ATFriendlyDateCriteria']:
         date_base = criterion.getCriteriaItems()[0][1]['query']
+        if date_base==None:
+            date_base = DateTime()
         date_limit = get_date_limit(flexitopic.context, criterion,
                                     catalog)
         start_date = min(date_base, date_limit)
@@ -101,7 +103,7 @@ def _search_result_cachekey(fun, flexitopic):
     return ckey
 
 
-@ram.cache(_search_result_cachekey)
+#@ram.cache(_search_result_cachekey)
 def get_search_results(flexitopic):
     form = flexitopic.request.form
 
