@@ -199,10 +199,11 @@ class FormViewlet(BaseViewlet):
                                 else:
                                     idx_name=idx_value
                                 is_selected = self._sel(idx_value,selected)
-                                options += u'<option value="%(value)s" %(selected)s >%(name)s</option>' % {
+                                option = '<option value="%(value)s" %(selected)s >%(name)s</option>' % {
                                     'value': idx_value,
                                     'selected': is_selected,
                                     'name': idx_name}
+                                options += option.decode('utf8')
                             criterion_field['input'] = '''
                                     <select id="%s" name="%s">
                                     %s
@@ -218,7 +219,8 @@ class FormViewlet(BaseViewlet):
                                 if idx_value['value'] in criterion.Value():
                                     continue
                                 else:
-                                    options += u'<option value="%(value)s" %(selected)s >%(name)s</option>' % idx_value
+                                    option = '<option value="%(value)s" %(selected)s >%(name)s</option>' % idx_value
+                                    options += option.decode('utf8') 
                             criterion_field['input'] = '''
                                 <select id="%s" name="%s">
                                 %s
@@ -230,7 +232,8 @@ class FormViewlet(BaseViewlet):
                         # posible values
                         idx_values = self._get_index_values(criterion.Field())
                         for idx_value in idx_values:
-                            options += u'<option value="%(value)s" %(selected)s >%(name)s</option>' % idx_value
+                            option = '<option value="%(value)s" %(selected)s >%(name)s</option>' % idx_value
+                            options += option.decode('utf8')
                         criterion_field['input'] = '''
                             <select id="%s" name="%s">
                             %s

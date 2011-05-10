@@ -1,6 +1,15 @@
 Changelog
 =========
 
+0.2.2
+-----
+
+- fixed some unicodedecode error and assume utf8 in viewlets.py  
+
+- we do not need paster and zopeskel to run this packages, so removed it. Also
+  removed dups of README and (outdated) docs/INSTALL, polished ReST of README 
+  a bit.
+
 0.2.1
 -----
 
