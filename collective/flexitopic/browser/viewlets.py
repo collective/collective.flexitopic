@@ -377,7 +377,7 @@ class JsViewlet(BaseViewlet):
                 'url':url,
                 'col_model': ', '.join(tl),
                 'sort': sort,
-                'title': table_name,
+                'title': table_name.decode('utf8'),
                 'items_ppage': items_ppage,
                 'add_js': add_form_data_js,
                 'width': width,
