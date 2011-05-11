@@ -346,16 +346,16 @@ class JsViewlet(BaseViewlet):
         fields = get_topic_table_fields(self.context, self.portal_catalog)
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IFlexiTopicSettings)
-        width=settings.flexitopic_width
-        height=settings.flexitopic_height
-        field_width=int(width/len(fields))
+        width = settings.flexitopic_width
+        height = settings.flexitopic_height
+        field_width = int(width/len(fields))
         t = "{display: '%s', name : '%s', width : %i, sortable : %s, align: 'left'}"
         tl = []
         for field in fields:
             if is_sortable(field['name']):
-                sortable='true'
+                sortable = 'true'
             else:
-                sortable='false'
+                sortable = 'false'
             tl.append( t % (field['label'], field['name'], field_width, sortable))
         sort = ''
         for criterion in self.context.listCriteria():
@@ -384,4 +384,3 @@ class JsViewlet(BaseViewlet):
                 'height': height,
             }
         return js
-
