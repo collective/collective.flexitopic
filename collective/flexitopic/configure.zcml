@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
@@ -20,7 +21,7 @@
   <include package=".browser" />
   <include package="plone.app.registry" />
 
-  <i18n:registerTranslations directory="locales" />
+  <!--i18n:registerTranslations directory="locales" /-->
 
 
   <!-- File System Directory Views registration -->

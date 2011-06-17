@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
@@ -5,6 +6,9 @@
     <!-- -*- extra stuff goes here -*- -->
 
   <include package="plone.app.contentmenu" />
+  <include package="Products.CMFCore" file="configure.zcml" />
+  <include package="plone.app.registry" />
+
 
   <browser:menuItem
       title="Flexi Topic View"
@@ -35,7 +39,6 @@
       permission="zope2.View"
       />
 
-    <include package="plone.app.registry" />
 
     <!-- Control panel -->
     <browser:page

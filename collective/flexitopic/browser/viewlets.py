@@ -199,11 +199,10 @@ class FormViewlet(BaseViewlet):
                                 else:
                                     idx_name=idx_value
                                 is_selected = self._sel(idx_value,selected)
-                                option = '<option value="%(value)s" %(selected)s >%(name)s</option>' % {
+                                options += u'<option value="%(value)s" %(selected)s >%(name)s</option>' % {
                                     'value': idx_value,
                                     'selected': is_selected,
                                     'name': idx_name}
-                                options += option.decode('utf8')
                             criterion_field['input'] = '''
                                     <select id="%s" name="%s">
                                     %s
@@ -219,8 +218,7 @@ class FormViewlet(BaseViewlet):
                                 if idx_value['value'] in criterion.Value():
                                     continue
                                 else:
-                                    option = '<option value="%(value)s" %(selected)s >%(name)s</option>' % idx_value
-                                    options += option.decode('utf8') 
+                                    options += u'<option value="%(value)s" %(selected)s >%(name)s</option>' % idx_value
                             criterion_field['input'] = '''
                                 <select id="%s" name="%s">
                                 %s
@@ -232,8 +230,7 @@ class FormViewlet(BaseViewlet):
                         # posible values
                         idx_values = self._get_index_values(criterion.Field())
                         for idx_value in idx_values:
-                            option = '<option value="%(value)s" %(selected)s >%(name)s</option>' % idx_value
-                            options += option.decode('utf8')
+                            options += u'<option value="%(value)s" %(selected)s >%(name)s</option>' % idx_value
                         criterion_field['input'] = '''
                             <select id="%s" name="%s">
                             %s
@@ -261,9 +258,9 @@ class FormViewlet(BaseViewlet):
 class FlexigridViewlet(BaseViewlet):
     ''' displays the flexigrid results'''
 
-
 class ResultTableViewlet(BaseViewlet):
     '''plain html results table '''
+
 
     def get_table_fields(self):
         return get_topic_table_fields(self.context, self.portal_catalog)
@@ -278,13 +275,12 @@ class ResultTableViewlet(BaseViewlet):
         results['display_legend'] = (results['num_results'] > 0)
         return results
 
-
 class JsViewlet(BaseViewlet):
-    """
-    Inserts the js to render the above viewlets.
-    """
+    ''' inserts the js to render the above viewlets '''
+
 
     render = ViewPageTemplateFile("templates/jstemplate.pt")
+
 
     js_template = """
  $(document).ready(function() {
@@ -333,50 +329,49 @@ class JsViewlet(BaseViewlet):
 
     add_form_data_js ='//%s'
 
+
     def get_js(self):
-        """
-        {display: 'Title', name : 'Title', width : 220, sortable : true, 
-        align: 'left'}
-        """
+        """{display: 'Title', name : 'Title', width : 220, sortable : true, align: 'left'}"""
         def is_sortable(sortname):
             if sortname in IDX_METADATA.keys():
                 return True
             elif sortname in self.portal_catalog.Indexes.keys():
-                if self.portal_catalog.Indexes[sortname].meta_type in [ 
-                   'FieldIndex', 'DateIndex', 'KeywordIndex']:
+                if self.portal_catalog.Indexes[sortname].meta_type in [
+                        'FieldIndex', 'DateIndex', 'KeywordIndex']:
                     return True
             return False
         fields = get_topic_table_fields(self.context, self.portal_catalog)
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IFlexiTopicSettings)
-        width = settings.flexitopic_width
-        height = settings.flexitopic_height
-        field_width = int(width/len(fields))
-        tpl = "{display: '%s', name : '%s', width : %i, sortable : %s, "+\
-              "align: 'left'}"
+        width=settings.flexitopic_width
+        height=settings.flexitopic_height
+        field_width=int(width/len(fields))
+        t = "{display: '%s', name : '%s', width : %i, sortable : %s, align: 'left'}"
         tl = []
         for field in fields:
-            sortable = str(is_sortable(field['name'])).lower()
-            tl.append(tpl % (field['label'], field['name'], field_width, 
-                             sortable))
+            if is_sortable(field['name']):
+                sortable='true'
+            else:
+                sortable='false'
+            tl.append( t % (field['label'], field['name'], field_width, sortable))
         sort = ''
         for criterion in self.context.listCriteria():
-            if criterion.meta_type !='ATSortCriterion':
-                continue
-            sortname = criterion.getCriteriaItems()[0][1]
-            sortorder = 'asc'
-            if len(criterion.getCriteriaItems())==2 \
-               and criterion.getCriteriaItems()[1][1] =='reverse':
-                sortorder = 'desc'
-            sort = "sortname: '%s', sortorder: '%s'," % (sortname, sortorder)
-        table_name = self.context.Title().decode('utf8')
+            if criterion.meta_type =='ATSortCriterion':
+                sortname = criterion.getCriteriaItems()[0][1]
+                sortorder = 'asc'
+                if len(criterion.getCriteriaItems())==2:
+                    if criterion.getCriteriaItems()[1][1] =='reverse':
+                        sortorder = 'desc'
+                sort = "sortname: '%s', sortorder: '%s'," % (
+                            sortname, sortorder)
+        table_name = self.context.Title()
         url = self.context.absolute_url() + '/@@flexijson_view'
         items_ppage = self.context.getItemCount()
         add_form_data_js = self.add_form_data_js % self.context.absolute_url()
         if items_ppage==0:
             items_ppage = 15
         js = self.js_template % {
-                'url': url,
+                'url':url,
                 'col_model': ', '.join(tl),
                 'sort': sort,
                 'title': table_name,
@@ -384,5 +379,6 @@ class JsViewlet(BaseViewlet):
                 'add_js': add_form_data_js,
                 'width': width,
                 'height': height,
-        }
+            }
         return js
+
