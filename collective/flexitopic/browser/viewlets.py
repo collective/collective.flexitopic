@@ -304,7 +304,7 @@ class JsViewlet(BaseViewlet):
             title: '%(title)s',
             useRp: true,
             rp: %(items_ppage)i,
-            showTableToggleBtn: true,
+            showTableToggleBtn: false,
             width: %(width)i,
             onSubmit: addFormData,
             height: %(height)i
