@@ -2,11 +2,11 @@
     lang="en"
     xmlns:tal="http://xml.zope.org/namespaces/tal"
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-    i18n:domain="collective.flexitopic"
+    i18n:domain="plone"
     tal:omit-tag="">
 <form id="flexitopicsearchform" name="search" method="get" class="enableAutoFocus" action="@@flexitopic_view">
   <fieldset>
-    <legend i18n:domain="plone" i18n:translate="">Search</legend>
+    <legend i18n:translate="">Search</legend>
     <tal:loop tal:repeat="criterion view/get_criteria">
         <div class="field even"
             tal:define="oddrow repeat/criterion/odd;"
@@ -25,7 +25,6 @@
     <div class="formControls even">
         <input type="submit" value="Search" name="submit"
             class="searchButton"
-            i18n:domain="plone"
             i18n:attributes="value label_search;"/>
     </div>
   </fieldset>
