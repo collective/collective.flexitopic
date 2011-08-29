@@ -5,7 +5,7 @@
     i18n:domain="collective.flexitopic"
     tal:omit-tag="">
 
-<dt id="fieldsetlegend-about-projects" i18n:domain="plone" i18n:translate="">About</dt>
+<dt id="fieldsetlegend-about-projects" i18n:translate="">About</dt>
 <dd id="fieldset-about-projects">
     <div class="documentDescription"
         tal:content="here/Description">

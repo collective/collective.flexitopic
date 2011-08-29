@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: collective.flexitopic\n"
-"POT-Creation-Date: 2011-08-29 14:42+0000\n"
+"POT-Creation-Date: 2011-08-29 14:47+0000\n"
 "PO-Revision-Date: 2011-07-22 15:18+0200\n"
 "Last-Translator: Giacomo Spettoli <giacomo.spettoli@redomino.com>\n"
 "Language-Team: Redomino srl <info@redomino.com>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: collective.flexitopic\n"
 "X-Is-Fallback-For: it-ch it-it\n"
+
+#: ./browser/templates/about_viewlet.pt:8
+msgid "About"
+msgstr "A proposito di"
 
 #: ./browser/viewlets.py:100
 msgid "All"

@@ -4,7 +4,6 @@
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
     i18n:domain="collective.flexitopic"
     tal:omit-tag="">
-    <h1>mod</h1>    
 <form id="flexitopicsearchform" name="search" method="get" class="enableAutoFocus" action="@@flexitopic_view">
   <fieldset>
     <legend i18n:domain="plone" i18n:translate="">Search</legend>
