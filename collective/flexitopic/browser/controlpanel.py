@@ -7,7 +7,7 @@ class FlexiTopicEditForm(controlpanel.RegistryEditForm):
 
     schema = IFlexiTopicSettings
     label = _(u"Flexitopic settings")
-    description = _(u"""""")
+    description = _(u"Flexitopic settings")
 
     def updateFields(self):
         super(FlexiTopicEditForm, self).updateFields()

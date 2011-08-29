@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: collective.flexitopic\n"
-"POT-Creation-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"POT-Creation-Date: 2011-08-29 14:42+0000\n"
 "PO-Revision-Date: 2011-07-22 15:18+0200\n"
 "Last-Translator: Giacomo Spettoli <giacomo.spettoli@redomino.com>\n"
 "Language-Team: Redomino srl <info@redomino.com>\n"

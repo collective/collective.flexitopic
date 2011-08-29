@@ -1,6 +1,14 @@
-<dt id="fieldsetlegend-about-projects">About</dt>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+    lang="en"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="collective.flexitopic"
+    tal:omit-tag="">
+
+<dt id="fieldsetlegend-about-projects" i18n:domain="plone" i18n:translate="">About</dt>
 <dd id="fieldset-about-projects">
-  <div class="documentDescription"
-    tal:content="here/Description">
-  </div>
+    <div class="documentDescription"
+        tal:content="here/Description">
+    </div>
 </dd>
+</html>
