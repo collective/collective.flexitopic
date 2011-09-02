@@ -14,7 +14,7 @@ from utils import get_search_results, get_topic_table_fields
 from utils import IDX_METADATA, get_start_end, get_renderd_table
 
 KEYWORD_DELIMITER = ':'
-
+DATE_FIELD_WIDTH = 80
 
 class BaseViewlet(base.ViewletBase):
     ''' a common base for the viewlets used here '''
@@ -340,20 +340,40 @@ class JsViewlet(BaseViewlet):
                         'FieldIndex', 'DateIndex', 'KeywordIndex']:
                     return True
             return False
+        def is_date(sortname):
+            if sortname in IDX_METADATA and sortname !='Title':
+                return True
+            elif sortname in self.portal_catalog.Indexes.keys():
+                if self.portal_catalog.Indexes[sortname].meta_type in ['DateIndex']:
+                    return True
+            return False
         fields = get_topic_table_fields(self.context, self.portal_catalog)
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IFlexiTopicSettings)
         width=settings.flexitopic_width
         height=settings.flexitopic_height
-        field_width=int(width/len(fields))
+        i_date = 0
+        for field in fields:
+            if is_date(field['name']):
+                i_date += 1
+        date_fields_width = DATE_FIELD_WIDTH * i_date
+        if len(fields) > i_date:
+            field_width=int((width - date_fields_width - 20)/(len(fields)-i_date))
+        else:
+            field_width = DATE_FIELD_WIDTH
         t = "{display: '%s', name : '%s', width : %i, sortable : %s, align: 'left'}"
         tl = []
         for field in fields:
+            this_field_width = 0
+            if is_date(field['name']):
+                this_field_width = DATE_FIELD_WIDTH
+            else:
+                this_field_width = field_width
             if is_sortable(field['name']):
                 sortable='true'
             else:
                 sortable='false'
-            tl.append( t % (field['label'], field['name'], field_width, sortable))
+            tl.append( t % (field['label'], field['name'], this_field_width, sortable))
         sort = ''
         for criterion in self.context.listCriteria():
             if criterion.meta_type =='ATSortCriterion':
