@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.3'
+version = '0.4'
 
 setup(name='collective.flexitopic',
       version=version,
@@ -12,10 +12,12 @@ setup(name='collective.flexitopic',
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Framework :: Plone",
+        "Framework :: Plone :: 4.0",
+        "Framework :: Plone :: 4.1",
         "Programming Language :: Python",
         "Development Status :: 4 - Beta",
+        #"Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: GNU General Public License (GPL)",
-
         ],
       keywords='',
       author='Christian Ledermann',
@@ -37,6 +39,6 @@ setup(name='collective.flexitopic',
       [z3c.autoinclude.plugin]
       target = plone
       """,
-      setup_requires=["PasteScript"],
-      paster_plugins=["ZopeSkel"],
+      #setup_requires=["PasteScript"],
+      #paster_plugins=["ZopeSkel"],
       )

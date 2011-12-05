@@ -77,7 +77,7 @@ class FlexiJsonView(BrowserView):
                     value = vt
                 elif type(value) in StringTypes:
                     value = value.decode('utf-8', 'ignore').encode('ascii', 'xmlcharrefreplace')
-                if value==None:
+                if not value:
                     cell.append('')
                 elif field['idx_type'] == 'DateIndex':
                     dateval = util.ulocalized_time( value,

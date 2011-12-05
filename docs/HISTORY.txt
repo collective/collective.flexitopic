@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.4
+---
+
+ - make date columns smaller
+ - remove minimize button from table
+
+
 0.3
 ---
 
