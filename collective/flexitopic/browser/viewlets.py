@@ -15,6 +15,8 @@ from utils import IDX_METADATA, get_start_end, get_renderd_table
 
 KEYWORD_DELIMITER = ':'
 DATE_FIELD_WIDTH = 80
+FG_PADDING_WIDTH = 5
+
 
 class BaseViewlet(base.ViewletBase):
     ''' a common base for the viewlets used here '''
@@ -41,13 +43,14 @@ class SubtopicViewlet(BaseViewlet):
                 title = sub_topic.Title()
                 description = sub_topic.Description()
                 text = sub_topic.getText()
+                size = sub_topic.getItemCount()
                 id = sub_topic.id
                 stl.append({'fields': fields,
                             'results': results,
                             'title': title,
                             'description': description,
                             'text': text,
-                            'size': 0,
+                            'size': size,
                             'start':0,
                             'display_legend': False,
                             'id': 'topic-' + id})
@@ -358,7 +361,10 @@ class JsViewlet(BaseViewlet):
                 i_date += 1
         date_fields_width = DATE_FIELD_WIDTH * i_date
         if len(fields) > i_date:
-            field_width=int((width - date_fields_width - 20)/(len(fields)-i_date))
+            field_width=int(
+                (width - date_fields_width - 18 -
+                    (len(fields) * FG_PADDING_WIDTH))/
+                (len(fields)-i_date))
         else:
             field_width = DATE_FIELD_WIDTH
         t = "{display: '%s', name : '%s', width : %i, sortable : %s, align: 'left'}"

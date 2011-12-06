@@ -27,10 +27,13 @@
           </tal:loop>
         </tr>
     </thead>
-    <tfoot tal:define="batch python:Batch(results, b_size, int(b_start), orphan=1);">
-        <tr> <td colspan="5" tal:attributes="colspan python:len(fields)">
+    <tfoot tal:define="batch python:Batch(results, b_size, int(b_start), orphan=1);"
+        tal:condition="python: b_size < len(results)">
+        <tr>
+          <td colspan="5" tal:attributes="colspan python:len(fields)">
             <div metal:use-macro="here/batch_macros/macros/navigation" />
-        </td></tr>
+          </td>
+        </tr>
     </tfoot>
     <tbody tal:condition="results" tal:define="batch python:Batch(results, b_size, int(b_start), orphan=1);
                                                 toLocalizedTime nocall:context/@@plone/toLocalizedTime">

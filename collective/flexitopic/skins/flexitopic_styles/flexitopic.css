@@ -23,3 +23,8 @@
 #flexitopicsearchform input.searchButton {
 clear: both;
 }
+
+
+.flexigrid div.hDiv th {
+line-height: 1em;
+}
