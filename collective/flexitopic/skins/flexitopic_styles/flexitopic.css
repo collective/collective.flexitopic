@@ -28,3 +28,7 @@ clear: both;
 .flexigrid div.hDiv th {
 line-height: 1em;
 }
+
+.flexigrid div.hDivBox table {
+margin-bottom: 0;
+}
