@@ -367,7 +367,7 @@ class JsViewlet(BaseViewlet):
                 (len(fields)-i_date))
         else:
             field_width = DATE_FIELD_WIDTH
-        t = "{display: '%s', name : '%s', width : %i, sortable : %s, align: 'left'}"
+        t = "{display: '%s', name : '%s', width : %i, sortable : %s, align: 'left', hide: false}"
         tl = []
         for field in fields:
             this_field_width = 0
