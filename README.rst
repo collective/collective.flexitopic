@@ -20,8 +20,8 @@ Usage
 =====
 
 Add a collection. Criteria of the collection will be used to build
-a form to narrow down your search inside the collection. If the criterion (the 
-index in portal_catalog) is sortable you can sort this column. Not all criteria 
+a form to narrow down your search inside the collection. If the criterion (the
+index in portal_catalog) is sortable you can sort this column. Not all criteria
 types can be used as input for Flexi-collection so beware.
 
 Search Text
@@ -31,16 +31,16 @@ Search Text
   supplied.
 Title
   search or sort by title (see above)
-Description 
+Description
   search description only (search see above, no sorting here!)
 Dates (effective, created, ...)
-  will be converted to date ranges and can be selected with the JQuery Slider 
+  will be converted to date ranges and can be selected with the JQuery Slider
   Plugin
 Location (path index)
   will not be displayed in the search form and always be applied to the query
 Keyword Indices (like tags)
   a drop down list will be generated to narrow the search down
-  
+
   - if the criterion operator is AND the list will contain all unique
     values of the index minus the ones you selected, the query will search
     for all terms that match your criteria plus the user input
@@ -55,25 +55,25 @@ Subtopics
   Flexitopic will display subtopics as tabs on top of the page. The first
   tab is the description of the topic, subtopics will occupy the following
   tabs. Subtopics will always be displayed as (plain html) tables defined
-  by the criteria,  ``Table Columns`` and the ``Number of Items`` of the 
+  by the criteria,  ``Table Columns`` and the ``Number of Items`` of the
   subtopic.
 
 Installation
 ============
-Install collective.flexitopic as part of a specific project's buildout.  
+Install collective.flexitopic as part of a specific project's buildout.
 Add to buildouts configuration such as::
 
-        [buildout]
-        ...
-        eggs =
-            collective.flexitopic
+    [buildout]
+    ...
+    eggs =
+        collective.flexitopic
 
 Participation
 =============
 
 Code repository
-  https://svn.plone.org/svn/collective/collective.flexitopic/
+  https://github.com/collective/collective.flexitopic/
 Questions and comments
   mailto:product-developers@lists.plone.org
-Bug Reports 
-   http://plone.org/products/collective.flexitopic/issues
+Bug Reports
+   https://github.com/collective/collective.flexitopic/issues

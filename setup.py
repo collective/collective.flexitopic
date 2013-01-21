@@ -6,7 +6,7 @@ version = '0.4.1'
 setup(name='collective.flexitopic',
       version=version,
       description="Searchable Collections with Flexigrid",
-      long_description=open("README.txt").read() + "\n" +
+      long_description=open("README.rst").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from
       # http://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -22,7 +22,7 @@ setup(name='collective.flexitopic',
       keywords='',
       author='Christian Ledermann',
       author_email='christian.ledermann@gmail.com',
-      url='http://plone.org/products/collective.flexitopic',
+      url='https://github.com/collective/collective.flexitopic',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['collective'],
@@ -39,6 +39,4 @@ setup(name='collective.flexitopic',
       [z3c.autoinclude.plugin]
       target = plone
       """,
-      #setup_requires=["PasteScript"],
-      #paster_plugins=["ZopeSkel"],
       )
