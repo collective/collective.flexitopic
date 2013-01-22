@@ -379,7 +379,8 @@ class JsViewlet(BaseViewlet):
                 sortable='true'
             else:
                 sortable='false'
-            tl.append( t % (field['label'], field['name'], this_field_width, sortable))
+            tl.append( t % (self.context.translate(_(field['label'])),
+                        field['name'], this_field_width, sortable))
         sort = ''
         for criterion in self.context.listCriteria():
             if criterion.meta_type =='ATSortCriterion':

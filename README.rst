@@ -6,15 +6,18 @@ AJAX view. The criteria from the topic are taken to construct a simple
 query form to narrow down a search inside a collection. Subtopics are
 displayed inside tabs of the collection.
 
-.. _Flexigrid: http://flexigrid.info/
+
 
 * Flexitopic does not install a new content type but just adds an additional view to the collection type.
 * it degrades for non javascript browsers to a simple table - (almost) same usability, no information loss.
 * it requires JQuery only (built into plone 4) no JQuery UI
 * lightweight JS
-      * Flexigrid: 24 KB packed
-      * Slider 15 KB packed
+      * Flexigrid_: 24 KB packed
+      * JSlider_: 15 KB packed
 
+
+.. _Flexigrid: http://flexigrid.info/
+.. _JSlider: http://egorkhmelev.github.com/jslider/
 
 Usage
 =====

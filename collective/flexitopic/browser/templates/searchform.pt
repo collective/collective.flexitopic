@@ -11,9 +11,9 @@
         <div class="field even"
             tal:define="oddrow repeat/criterion/odd;"
             tal:attributes="class python:oddrow and 'field even' or 'field odd'">
-            <label i18n:translate="" tal:content="criterion/label"
+            <label i18n:domain="collective.flexitopic" i18n:translate="" tal:content="criterion/label"
                 tal:attributes="for criterion/field">Field name</label>
-            <div class="formHelp" i18n:translate="" tal:content="criterion/description">
+            <div class="formHelp" i18n:domain="collective.flexitopic" i18n:translate="" tal:content="criterion/description">
             help description
             </div>
             <div  tal:replace="structure criterion/input" />
@@ -24,7 +24,7 @@
     </tal:loop>
     <div class="formControls even">
         <input type="submit" value="Search" name="submit"
-            class="searchButton"
+            class="searchButton allowMultiSubmit"
             i18n:attributes="value label_search;"/>
     </div>
   </fieldset>

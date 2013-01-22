@@ -7,8 +7,14 @@ from time import time
 
 from plone.registry.interfaces import IRegistry
 from collective.flexitopic.interfaces import IFlexiTopicSettings
+from collective.flexitopic import flexitopicMessageFactory as _
+# just to cheat i18ndude
+title = _('Title')
+phone = _('Phone')
 
 RAM_CACHE_SECONDS = 3600
+
+
 
 IDX_METADATA = {
         'Title': 'sortable_title',

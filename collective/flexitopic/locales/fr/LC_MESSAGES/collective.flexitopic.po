@@ -20,7 +20,7 @@ msgstr ""
 
 #: ./browser/viewlets.py:102
 msgid "All"
-msgstr ""
+msgstr "Tout"
 
 #: ./profiles/default/controlpanel.xml
 msgid "Flexitopic"
@@ -28,31 +28,31 @@ msgstr ""
 
 #: ./interfaces.py:26
 msgid "Flexitopic height"
-msgstr ""
+msgstr "Hauteur de Flexitopic"
 
 #: ./browser/controlpanel.py:9
 msgid "Flexitopic settings"
-msgstr ""
+msgstr "Paramètres de Flexitopic"
 
 #: ./interfaces.py:21
 msgid "Flexitopic width"
-msgstr ""
+msgstr "Largeur de Flexitopic"
 
 #: ./interfaces.py:27
 msgid "Height of the flexigrid table"
-msgstr ""
+msgstr "Hauteur de la table flexigrid"
 
 #: ./browser/utils.py:14
 msgid "Phone"
-msgstr ""
+msgstr "Téléphone"
 
 #: ./browser/utils.py:13
 msgid "Title"
-msgstr "Search by name"
+msgstr "Recherche pour Nom e Prenom"
 
 #: ./interfaces.py:22
 msgid "Width of the flexigrid table"
-msgstr ""
+msgstr "Lageur de la table flexigrid"
 
 #: ./browser/viewlets.py:358
 msgid "label"
