@@ -7,12 +7,10 @@ from interfaces import IFlexiTopicView
 from utils import get_renderd_table
 
 class FlexiTopicView(BrowserView):
-    """
-    FlexiTopic browser view
-    """
+
     implements(IFlexiTopicView)
 
-    __call__ = ViewPageTemplateFile('templates/flexitopicview.pt')
+    #__call__ = ViewPageTemplateFile('templates/flexitopicview.pt')
 
     def __init__(self, context, request):
         self.context = context
@@ -29,5 +27,8 @@ class FlexiTopicView(BrowserView):
 
 
 
-
-
+class FlexiCollectionView(FlexiTopicView):
+    """
+    FlexiTopic browser view
+    """
+    #__call__ = ViewPageTemplateFile('templates/flexicollectionview.pt')

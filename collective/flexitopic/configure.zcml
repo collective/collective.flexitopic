@@ -11,7 +11,7 @@
 
   <genericsetup:registerProfile
       name="default"
-      title="collective.flexitopic"
+      title="Flexitopic"
       directory="profiles/default"
       description="Installs the collective.flexitopic package"
       provides="Products.GenericSetup.interfaces.EXTENSION"

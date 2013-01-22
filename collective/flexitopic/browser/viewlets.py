@@ -13,6 +13,12 @@ from collective.flexitopic import flexitopicMessageFactory as _
 from utils import get_search_results, get_topic_table_fields
 from utils import IDX_METADATA, get_start_end, get_renderd_table
 
+try:
+    from plone.app.querystring import queryparser
+    from plone.app.querystring.registryreader import QuerystringRegistryReader
+except ImportError:
+    pass
+
 KEYWORD_DELIMITER = ':'
 DATE_FIELD_WIDTH = 80
 FG_PADDING_WIDTH = 5
@@ -58,7 +64,7 @@ class SubtopicViewlet(BaseViewlet):
         return stl
 
 class FormViewlet(BaseViewlet):
-    ''' displays the query form'''
+    ''' displays the query form for ols style collections'''
 
     @property
     def portal_catalog(self):
@@ -183,9 +189,9 @@ class FormViewlet(BaseViewlet):
                 elif criterion.meta_type in ['ATSelectionCriterion',
                                             'ATListCriterion']:
                     options = u''
-                    if criterion.Field() == 'review_state':
-                        continue
                     if criterion.Value():
+                        if len(criterion.Value()) ==1:
+                            continue
                         selected = self.request.get(criterion.Field(),None)
                         if criterion.getOperator()=='or':
                             # we let the user choose from the selected
@@ -257,6 +263,82 @@ class FormViewlet(BaseViewlet):
                 criteria.append(criterion_field)
         return criteria
 
+
+class FormViewletNG(FormViewlet):
+    ''' displays the query form for new style collections'''
+
+    def get_criteria(self):
+        ''' combine request with topic criteria '''
+        criteria = []
+        #query = queryparser.parseFormquery(self.context, self.context.getRawQuery())
+        registry = getUtility(IRegistry)
+        qsrr = QuerystringRegistryReader(registry)
+        for raw_query in self.context.getRawQuery():
+            criterion = qsrr()['indexes'][raw_query['i']]
+            input_html = ''
+            selected = self.request.get(raw_query['i'],None)
+            id = raw_query['i'] + '_' + raw_query['o'].replace('.','_')
+            if raw_query['o'] == 'plone.app.querystring.operation.selection.is':
+                if len(raw_query['v'])==1:
+                    continue
+                if selected:
+                    options = u'<option value="">All</option>'
+                else:
+                    options = u'<option selected="selected" value="">All</option>'
+                for value in raw_query['v']:
+                    is_selected = self._sel(value,selected)
+                    optstr = u'<option value="%(value)s" %(selected)s >%(name)s</option>'
+                    options += optstr % {
+                                        'value': value,
+                                        'selected': is_selected,
+                                        'name': value}
+                    input_html = '''
+                        <select id="%s" name="%s">
+                        %s
+                        </select>''' % ( id,
+                            raw_query['i'], options)
+            elif raw_query['o']=='plone.app.querystring.operation.string.contains':
+                value = self.request.get(raw_query['i'],'')
+                input_html = '''<input type="text"
+                            size="25"
+                            name="%s"
+                            id="search-%s"
+                            value="%s"/>''' % (id,
+                                raw_query['i'], value)
+            elif raw_query['o']=='plone.app.querystring.operation.date.largerThanRelativeDate':
+                #within last n days
+                pass
+            elif raw_query['o']=='plone.app.querystring.operation.date.beforeToday':
+                pass
+            elif raw_query['o']=='plone.app.querystring.operation.date.lessThanRelativeDate':
+                #within next n days
+                pass
+            elif raw_query['o']=='plone.app.querystring.operation.date.largerThan':
+                #after date
+                pass
+            elif raw_query['o']=='plone.app.querystring.operation.date.today':
+                pass
+            elif raw_query['o']=='plone.app.querystring.operation.date.afterToday':
+                pass
+            elif raw_query['o']=='plone.app.querystring.operation.date.lessThan':
+                # before date
+                pass
+            elif raw_query['o']=='plone.app.querystring.operation.date.between':
+                # between date and date
+                pass
+            else:
+                continue
+
+            criterion_field = {
+                'id': raw_query['i'] + '_' + raw_query['o'].replace('.','_'),
+                'description': criterion['description'],
+                'label': criterion['title'],
+                'field': raw_query['i'],
+                'input': input_html,
+                }
+            criteria.append(criterion_field)
+        import ipdb; ipdb.set_trace()
+        return criteria
 
 class FlexigridViewlet(BaseViewlet):
     ''' displays the flexigrid results'''
@@ -398,7 +480,7 @@ class JsViewlet(BaseViewlet):
         if items_ppage==0:
             items_ppage = 15
         js = self.js_template % {
-                'url':url,
+                'url': url,
                 'col_model': ', '.join(tl),
                 'sort': sort,
                 'title': table_name,

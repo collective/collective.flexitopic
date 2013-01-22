@@ -2,6 +2,7 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="collective.flexitopic">
     <!-- -*- extra stuff goes here -*- -->
 
@@ -16,9 +17,8 @@
       menu="plone_displayviews"
       action="flexitopic_view"
       description="Set Flexitopic as default view."
+      layer = "..interfaces.IFlexiTopicLayer"
       />
-
-
 
 
   <browser:page
@@ -26,6 +26,7 @@
       name="flexijson_view"
       class=".flexijsonview.FlexiJsonView"
       allowed_interface=".flexijsonview.IFlexiJsonView"
+      layer = "..interfaces.IFlexiTopicLayer"
       permission="zope2.View"
       />
 
@@ -36,8 +37,21 @@
       class=".flexitopicview.FlexiTopicView"
       template="templates/flexitopicview.pt"
       allowed_interface=".flexitopicview.IFlexiTopicView"
+      layer = "..interfaces.IFlexiTopicLayer"
       permission="zope2.View"
       />
+
+  <!-- New style collections -->
+  <browser:page
+      zcml:condition="installed plone.app.collection"
+      for="plone.app.collection.interfaces.ICollection"
+      name="flexitopic_view"
+      class=".flexitopicview.FlexiCollectionView"
+      template="templates/flexicollectionview.pt"
+      allowed_interface=".flexitopicview.IFlexiTopicView"
+      layer = "..interfaces.IFlexiTopicLayer"
+      permission="zope2.View"/>
+
 
 
     <!-- Control panel -->
@@ -65,7 +79,7 @@
         />
 
     <browser:viewletManager
-        name="collective.flexitopic.bottom"
+        name="collective.flexitopic.table"
         provides=".interfaces.IFlexiTopicBottom"
         permission="zope2.View"
         class="plone.app.viewletmanager.manager.OrderedViewletManager"
@@ -105,11 +119,27 @@
         view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.searchform"
         manager=".interfaces.IFlexiTopicForm"
+        for="Products.ATContentTypes.interfaces.topic.IATTopic"
         layer="..interfaces.IFlexiTopicLayer"
         class=".viewlets.FormViewlet"
         permission="zope2.View"
         template="templates/searchform.pt"
         />
+
+    <browser:viewlet
+        zcml:condition="installed plone.app.collection"
+        view=".interfaces.IFlexiTopicView"
+        name="collective.flexitopic.searchform"
+        manager=".interfaces.IFlexiTopicForm"
+        for="plone.app.collection.interfaces.ICollection"
+        layer="..interfaces.IFlexiTopicLayer"
+        class=".viewlets.FormViewletNG"
+        permission="zope2.View"
+        template="templates/searchform.pt"
+        />
+
+
+
 
     <browser:viewlet
         view=".interfaces.IFlexiTopicView"

@@ -37,8 +37,8 @@ Title
 Description
   search description only (search see above, no sorting here!)
 Dates (effective, created, ...)
-  will be converted to date ranges and can be selected with the JQuery Slider
-  Plugin
+  will be converted to date ranges and can be selected with the JQuery
+  JSlider_ Plugin
 Location (path index)
   will not be displayed in the search form and always be applied to the query
 Keyword Indices (like tags)
@@ -54,7 +54,7 @@ The output is always a table with the fields you supplied in the
 ``Table Columns`` of the collection, no matter if ``Display as Table``
 is checked or not.
 
-Subtopics
+Subtopics (old style collections only)
   Flexitopic will display subtopics as tabs on top of the page. The first
   tab is the description of the topic, subtopics will occupy the following
   tabs. Subtopics will always be displayed as (plain html) tables defined

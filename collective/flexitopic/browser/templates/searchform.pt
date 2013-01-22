@@ -4,7 +4,9 @@
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
     i18n:domain="plone"
     tal:omit-tag="">
-<form id="flexitopicsearchform" name="search" method="get" class="enableAutoFocus" action="@@flexitopic_view">
+<form id="flexitopicsearchform" name="search"
+    method="get" class="enableAutoFocus" action="@@flexitopic_view"
+    tal:condition="view/get_criteria">
   <fieldset>
     <legend i18n:translate="">Search</legend>
     <tal:loop tal:repeat="criterion view/get_criteria">
