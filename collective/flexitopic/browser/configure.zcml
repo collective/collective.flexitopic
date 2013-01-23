@@ -120,6 +120,7 @@
         view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.about"
         manager=".interfaces.IFlexiTopicTop"
+        for="Products.ATContentTypes.interfaces.topic.IATTopic"
         layer="..interfaces.IFlexiTopicLayer"
         class=".viewlets.AboutViewlet"
         permission="zope2.View"
@@ -127,6 +128,21 @@
         />
 
     <browser:viewlet
+        zcml:condition="installed plone.app.collection"
+        view=".interfaces.IFlexiTopicView"
+        name="collective.flexitopic.about"
+        manager=".interfaces.IFlexiTopicTop"
+        for="plone.app.collection.interfaces.ICollection"
+        layer="..interfaces.IFlexiTopicLayer"
+        class=".viewlets.AboutViewlet"
+        permission="zope2.View"
+        template="templates/about_collection_viewlet.pt"
+        />
+
+
+
+    <browser:viewlet
+        for="Products.ATContentTypes.interfaces.topic.IATTopic"
         view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.subtopics"
         manager=".interfaces.IFlexiTopicTop"

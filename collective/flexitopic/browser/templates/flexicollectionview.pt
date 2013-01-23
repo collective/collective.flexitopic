@@ -14,9 +14,7 @@
             </h1>
 
             <div tal:replace="structure provider:plone.belowcontenttitle" />
-            <div class="documentDescription"
-                tal:content="here/Description">
-            </div>
+            <div tal:replace="structure provider:collective.flexitopic.top" />
 
             <div tal:replace="structure provider:collective.flexitopic.form" />
             <div tal:replace="structure provider:collective.flexitopic.table" />

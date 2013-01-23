@@ -10,7 +10,7 @@ class FlexiTopicView(BrowserView):
 
     implements(IFlexiTopicView)
 
-    #__call__ = ViewPageTemplateFile('templates/flexitopicview.pt')
+    __call__ = ViewPageTemplateFile('templates/flexitopicview.pt')
 
     def __init__(self, context, request):
         self.context = context
@@ -31,4 +31,4 @@ class FlexiCollectionView(FlexiTopicView):
     """
     FlexiTopic browser view
     """
-    #__call__ = ViewPageTemplateFile('templates/flexicollectionview.pt')
+    __call__ = ViewPageTemplateFile('templates/flexicollectionview.pt')

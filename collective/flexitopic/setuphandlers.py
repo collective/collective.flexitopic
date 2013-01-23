@@ -13,7 +13,7 @@ def add_ng_collection(context, logger=None):
     setup = getToolByName(context, 'portal_setup')
     setup.runImportStepFromProfile(PROFILE_ID, 'typeinfo')
 
-def upgrade_registry(context, logger=None):  # pylint: disable=W0613
+def upgrade_registry(context, logger=None):
     """Re-import the portal configuration registry settings.
     """
     if logger is None:

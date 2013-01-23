@@ -6,7 +6,7 @@
     tal:omit-tag="">
 <form id="flexitopicsearchform" name="search"
     method="get" class="enableAutoFocus" action="@@flexitopic_view"
-    tal:attributes="action string:${here/absolute_url}/@@flexitopic_view""
+    tal:attributes="action string:${here/absolute_url}/@@${view/view/__name__}""
     tal:condition="view/get_criteria">
   <fieldset>
     <legend i18n:translate="">Search</legend>
