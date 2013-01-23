@@ -8,6 +8,11 @@ from time import time
 from plone.registry.interfaces import IRegistry
 from collective.flexitopic.interfaces import IFlexiTopicSettings
 from collective.flexitopic import flexitopicMessageFactory as _
+try:
+    from plone.app.querystring import queryparser
+except ImportError:
+    pass
+
 # just to cheat i18ndude
 title = _('Title')
 phone = _('Phone')
@@ -196,5 +201,54 @@ def get_search_results(flexitopic):
 
     results = catalog(**query)
 
+    return {'results': results, 'size': batch_size,
+        'start': batch_start, 'num_results': len(results)}
+
+def get_search_results_ng(flexitopic):
+    form = flexitopic.request.form
+
+    batch_size = form.get('b_size', 20)
+    batch_start = form.get('b_start', 0)
+    catalog = flexitopic.portal_catalog
+    query = queryparser.parseFormquery(flexitopic.context,
+            flexitopic.context.getRawQuery())
+    for raw_query in flexitopic.context.getRawQuery():
+            value = form.get(raw_query['i'], False)
+            if value:
+                if (
+                (raw_query['o'] == 'plone.app.querystring.operation.selection.is')
+                and (value in raw_query['v'])):
+                    query[raw_query['i']]['query'] = value
+                elif raw_query['o'] == 'plone.app.querystring.operation.string.contains':
+                    if raw_query['v']:
+                        query[raw_query['i']]['query'] = value + ' AND ' + raw_query['v']
+                    else:
+                        query[raw_query['i']]['query'] = value
+
+    sortorder = form.get('sortorder',None)
+
+    if sortorder=='desc':
+        sort_order = 'reverse'
+    else:
+        sort_order = None
+    sort_on = None
+    sortname = form.get('sortname',None)
+    if sortname in IDX_METADATA.keys():
+        sort_on = IDX_METADATA[sortname]
+    elif sortname in flexitopic.portal_catalog.Indexes.keys():
+        if flexitopic.portal_catalog.Indexes[sortname].meta_type in [
+                'FieldIndex', 'DateIndex', 'KeywordIndex']:
+            sort_on = sortname
+    elif sortname == None:
+        #get sort_on/order out of topic
+        sort_on = flexitopic.context.getSort_on()
+        if flexitopic.context.getSort_reversed():
+            sort_order = 'reverse'
+    if sort_on:
+        query['sort_on'] = sort_on
+        if sort_order:
+            query['sort_order'] = sort_order
+
+    results = catalog(**query)
     return {'results': results, 'size': batch_size,
         'start': batch_start, 'num_results': len(results)}

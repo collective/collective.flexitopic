@@ -1,39 +1,45 @@
 Changelog
 =========
 
+0.5
+---
+
+- support for plone.app.collection
+
+
 0.4
 ---
 
- - make date columns smaller
- - remove minimize button from table
+- make date columns smaller
+- remove minimize button from table
 
 
 0.3
 ---
 
- - plone 4.1 compatible
- - upgrade flexigrid to ver 1.1
+- plone 4.1 compatible
+- upgrade flexigrid to ver 1.1
 
 
 0.2
 ---
 
 - do not display review state in searchform
-  split monolithic flexitopic_view into several viewlets
-  get items per page out of topic
-  render html table into a noscript area, flexigrid into an empty table
+-  split monolithic flexitopic_view into several viewlets
+-  get items per page out of topic
+-  render html table into a noscript area, flexigrid into an empty table
 
 
 0.1
 ---
 
 - First public release
-  Add slider to query for date ranges
-  Caching for expensive catalog queries
+-  Add slider to query for date ranges
+-  Caching for expensive catalog queries
 
 0.1dev (unreleased)
 -------------------
 
 - Initial release
-  Flexigrid to display search results
-  Generate search form from collection criteria
+-  Flexigrid to display search results
+-  Generate search form from collection criteria

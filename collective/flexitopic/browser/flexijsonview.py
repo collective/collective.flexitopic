@@ -14,7 +14,7 @@ except ImportError:
     import json
 
 
-from utils import get_search_results, get_topic_table_fields
+from utils import get_search_results, get_topic_table_fields, get_search_results_ng
 
 logger = logging.getLogger('collective.flexitopic')
 
@@ -39,6 +39,9 @@ class FlexiJsonView(BrowserView):
     def portal(self):
         return getToolByName(self.context, 'portal_url').getPortalObject()
 
+    def _get_search_results(self):
+        return get_search_results(self)['results']
+
     def __call__(self):
         """
         Return JSON for flexigrid, the query form looks like:
@@ -52,7 +55,7 @@ class FlexiJsonView(BrowserView):
         limit = int(form.get('rp', '15'))
         start = (int(form.get('page', '1')) - 1) * limit
         end = start + limit + 1
-        results = get_search_results(self)['results']
+        results = self._get_search_results()
         json_result= {"page":form.get('page', '1') ,
             "total":len(results),
             "rows":[]}
@@ -99,4 +102,12 @@ class FlexiJsonView(BrowserView):
 
         self.request.RESPONSE.setHeader('Content-Type','application/json; charset=utf-8')
         return json.dumps(json_result)
+
+
+class FlexiJsonViewNG(FlexiJsonView):
+    """
+    FlexiJson browser view
+    """
+    def _get_search_results(self):
+        return get_search_results_ng(self)['results']
 

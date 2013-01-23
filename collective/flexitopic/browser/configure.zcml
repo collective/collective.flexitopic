@@ -12,6 +12,17 @@
 
 
   <browser:menuItem
+      zcml:condition="installed plone.app.collection"
+      for="plone.app.collection.interfaces.ICollection"
+      title="Flexi Topic View"
+      menu="plone_displayviews"
+      action="flexitopic_view"
+      description="Set Flexitopic as default view."
+      layer = "..interfaces.IFlexiTopicLayer"
+      />
+
+
+  <browser:menuItem
       title="Flexi Topic View"
       for="Products.ATContentTypes.interface.IATTopic"
       menu="plone_displayviews"
@@ -29,6 +40,7 @@
       layer = "..interfaces.IFlexiTopicLayer"
       permission="zope2.View"
       />
+
 
 
   <browser:page
@@ -52,6 +64,15 @@
       layer = "..interfaces.IFlexiTopicLayer"
       permission="zope2.View"/>
 
+  <browser:page
+      zcml:condition="installed plone.app.collection"
+      for="plone.app.collection.interfaces.ICollection"
+      name="flexijson_view"
+      class=".flexijsonview.FlexiJsonViewNG"
+      allowed_interface=".flexijsonview.IFlexiJsonView"
+      layer = "..interfaces.IFlexiTopicLayer"
+      permission="zope2.View"
+      />
 
 
     <!-- Control panel -->
@@ -139,8 +160,6 @@
         />
 
 
-
-
     <browser:viewlet
         view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.flexigrid"
@@ -155,11 +174,26 @@
         view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.resulttable"
         manager=".interfaces.IFlexiTopicBottom"
+        for="Products.ATContentTypes.interfaces.topic.IATTopic"
         layer="..interfaces.IFlexiTopicLayer"
         class=".viewlets.ResultTableViewlet"
         permission="zope2.View"
         template="templates/resulttable.pt"
         />
+
+
+    <browser:viewlet
+        zcml:condition="installed plone.app.collection"
+        view=".interfaces.IFlexiTopicView"
+        name="collective.flexitopic.resulttable"
+        manager=".interfaces.IFlexiTopicBottom"
+        for="plone.app.collection.interfaces.ICollection"
+        layer="..interfaces.IFlexiTopicLayer"
+        class=".viewlets.ResultTableViewletNG"
+        permission="zope2.View"
+        template="templates/resulttable.pt"
+        />
+
     <!-- template="templates/jstemplate.pt" -->
     <browser:viewlet
         view=".interfaces.IFlexiTopicView"

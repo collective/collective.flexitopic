@@ -27,3 +27,10 @@ class IFlexiTopicSettings(Interface):
                                   description=_(u"Height of the flexigrid table"),
                                   required=True,
                                   default=200)
+    items_pp = schema.Choice(
+         title=_(u'Items per page'),
+         description=_(u"Number of items displayed in the table"),
+         values=(10, 15, 20, 30, 50),
+         default=20,
+         required=True,
+    )

@@ -10,7 +10,7 @@ from plone.registry.interfaces import IRegistry
 
 from collective.flexitopic.interfaces import IFlexiTopicSettings
 from collective.flexitopic import flexitopicMessageFactory as _
-from utils import get_search_results, get_topic_table_fields
+from utils import get_search_results, get_topic_table_fields, get_search_results_ng
 from utils import IDX_METADATA, get_start_end, get_renderd_table
 
 try:
@@ -301,8 +301,8 @@ class FormViewletNG(FormViewlet):
                 value = self.request.get(raw_query['i'],'')
                 input_html = '''<input type="text"
                             size="25"
-                            name="%s"
                             id="search-%s"
+                            name="%s"
                             value="%s"/>''' % (id,
                                 raw_query['i'], value)
             elif raw_query['o']=='plone.app.querystring.operation.date.largerThanRelativeDate':
@@ -337,7 +337,6 @@ class FormViewletNG(FormViewlet):
                 'input': input_html,
                 }
             criteria.append(criterion_field)
-        import ipdb; ipdb.set_trace()
         return criteria
 
 class FlexigridViewlet(BaseViewlet):
@@ -359,6 +358,17 @@ class ResultTableViewlet(BaseViewlet):
         results['id'] = "topichtmlresults"
         results['display_legend'] = (results['num_results'] > 0)
         return results
+
+class ResultTableViewletNG(ResultTableViewlet):
+
+    def search_results(self):
+        results = get_search_results_ng(self)
+        results['fields'] = self.get_table_fields()
+        results['id'] = "topichtmlresults"
+        results['display_legend'] = (results['num_results'] > 0)
+        return results
+
+
 
 class JsViewlet(BaseViewlet):
     ''' inserts the js to render the above viewlets '''
@@ -464,21 +474,36 @@ class JsViewlet(BaseViewlet):
             tl.append( t % (self.context.translate(_(field['label'])),
                         field['name'], this_field_width, sortable))
         sort = ''
-        for criterion in self.context.listCriteria():
-            if criterion.meta_type =='ATSortCriterion':
-                sortname = criterion.getCriteriaItems()[0][1]
+        if hasattr(self.context, 'listCriteria'):
+            #old style collection
+            for criterion in self.context.listCriteria():
+                if criterion.meta_type =='ATSortCriterion':
+                    sortname = criterion.getCriteriaItems()[0][1]
+                    sortorder = 'asc'
+                    if len(criterion.getCriteriaItems())==2:
+                        if criterion.getCriteriaItems()[1][1] =='reverse':
+                            sortorder = 'desc'
+                    sort = "sortname: '%s', sortorder: '%s'," % (
+                                sortname, sortorder)
+        elif hasattr(self.context, 'getSort_on'):
+            #new style collection
+            sortname = self.context.getSort_on()
+            sortorder = 'asc'
+            if self.context.getSort_reversed():
+                sortorder = 'desc'
+            else:
                 sortorder = 'asc'
-                if len(criterion.getCriteriaItems())==2:
-                    if criterion.getCriteriaItems()[1][1] =='reverse':
-                        sortorder = 'desc'
-                sort = "sortname: '%s', sortorder: '%s'," % (
-                            sortname, sortorder)
+            sort = "sortname: '%s', sortorder: '%s'," % (
+                                sortname, sortorder)
         table_name = self.context.Title()
         url = self.context.absolute_url() + '/@@flexijson_view'
-        items_ppage = self.context.getItemCount()
+        try:
+            items_ppage = self.context.getItemCount()
+        except AttributeError:
+            items_ppage = settings.items_pp
         add_form_data_js = self.add_form_data_js % self.context.absolute_url()
         if items_ppage==0:
-            items_ppage = 15
+            items_ppage = settings.items_pp
         js = self.js_template % {
                 'url': url,
                 'col_model': ', '.join(tl),

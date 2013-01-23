@@ -16,6 +16,24 @@
       description="Installs the collective.flexitopic package"
       provides="Products.GenericSetup.interfaces.EXTENSION"
       />
+
+  <genericsetup:upgradeStep
+      title="Upgrade Types Info"
+      description="Add new style collections"
+      source="2"
+      destination="3"
+      handler="collective.flexitopic.setuphandlers.add_ng_collection"
+      profile="collective.flexitopic:default" />
+
+
+  <genericsetup:upgradeStep
+      title="Upgrade Registry"
+      description="Upgrade Registry"
+      source="2"
+      destination="3"
+      handler="collective.flexitopic.setuphandlers.upgrade_registry"
+      profile="collective.flexitopic:default" />
+
   <!-- -*- extra stuff goes here -*- -->
 
   <include package=".browser" />

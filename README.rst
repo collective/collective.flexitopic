@@ -4,7 +4,7 @@ Introduction
 Flexitopic integrates the easy use of plone collections with a Flexigrid_
 AJAX view. The criteria from the topic are taken to construct a simple
 query form to narrow down a search inside a collection. Subtopics are
-displayed inside tabs of the collection.
+displayed inside tabs of the (old style) collection.
 
 
 
@@ -46,9 +46,11 @@ Keyword Indices (like tags)
 
   - if the criterion operator is AND the list will contain all unique
     values of the index minus the ones you selected, the query will search
-    for all terms that match your criteria plus the user input
+    for all terms that match your criteria plus the user input (old style
+    ciolletions only)
   - if the criterion is OR the terms you selected will be display in the
-    selection list. the search will be for the user supplied input only
+    selection list. The search will be for the user supplied input only.
+    This is the behaviour for new style collections.
 
 The output is always a table with the fields you supplied in the
 ``Table Columns`` of the collection, no matter if ``Display as Table``
