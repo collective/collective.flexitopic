@@ -10,6 +10,7 @@
     tal:condition="view/get_criteria">
   <fieldset>
     <legend i18n:translate="">Search</legend>
+    <div tal:replace="structure provider:collective.flexitopic.formext" />
     <tal:loop tal:repeat="criterion view/get_criteria">
         <div class="field even"
             tal:define="oddrow repeat/criterion/odd;"

@@ -241,8 +241,8 @@ def get_search_results(flexitopic):
     sortname = form.get('sortname',None)
     if sortname in IDX_METADATA.keys():
         sort_on = IDX_METADATA[sortname]
-    elif sortname in flexitopic.portal_catalog.Indexes.keys():
-        if flexitopic.portal_catalog.Indexes[sortname].meta_type in [
+    elif sortname in catalog.Indexes.keys():
+        if catalog.Indexes[sortname].meta_type in [
                 'FieldIndex', 'DateIndex', 'KeywordIndex']:
             sort_on = sortname
     elif sortname == None:
@@ -257,6 +257,13 @@ def get_search_results(flexitopic):
         if sort_order:
             query['sort_order'] = sort_order
 
+    if 'zgeo_geometry' in form.keys() and 'zgeo_geometry' in catalog.Indexes.keys():
+        geometry_operator = form.get('zgeo_geometry_usage', 'geometry_operator:within')
+        assert(geometry_operator.split(':')[0] == 'geometry_operator')
+        bbox = [int(float(c)) for c in form['zgeo_geometry'].split(',')]
+        if bbox != [-180, -90, 180, 90]:
+            query['zgeo_geometry'] = {'query': form['zgeo_geometry'],
+                'geometry_operator': geometry_operator.split(':')[1]}
     results = catalog(**query)
 
     return {'results': results, 'size': batch_size,
@@ -270,6 +277,7 @@ def get_search_results_ng(flexitopic):
     catalog = flexitopic.portal_catalog
     query = queryparser.parseFormquery(flexitopic.context,
             flexitopic.context.getRawQuery())
+    catalog.Indexes
     for raw_query in flexitopic.context.getRawQuery():
             value = form.get(raw_query['i'], False)
             if value:
@@ -300,8 +308,8 @@ def get_search_results_ng(flexitopic):
     sortname = form.get('sortname',None)
     if sortname in IDX_METADATA.keys():
         sort_on = IDX_METADATA[sortname]
-    elif sortname in flexitopic.portal_catalog.Indexes.keys():
-        if flexitopic.portal_catalog.Indexes[sortname].meta_type in [
+    elif sortname in catalog.Indexes.keys():
+        if catalog.Indexes[sortname].meta_type in [
                 'FieldIndex', 'DateIndex', 'KeywordIndex']:
             sort_on = sortname
     elif sortname == None:
@@ -313,7 +321,13 @@ def get_search_results_ng(flexitopic):
         query['sort_on'] = sort_on
         if sort_order:
             query['sort_order'] = sort_order
-
+    if 'zgeo_geometry' in form.keys() and 'zgeo_geometry' in catalog.Indexes.keys():
+        geometry_operator = form.get('zgeo_geometry_usage', 'geometry_operator:within')
+        assert(geometry_operator.split(':')[0] == 'geometry_operator')
+        bbox = [int(float(c)) for c in form['zgeo_geometry'].split(',')]
+        if bbox != [-180, -90, 180, 90]:
+            query['zgeo_geometry'] = {'query': form['zgeo_geometry'],
+                'geometry_operator': geometry_operator.split(':')[1]}
     results = catalog(**query)
     return {'results': results, 'size': batch_size,
         'start': batch_start, 'num_results': len(results)}

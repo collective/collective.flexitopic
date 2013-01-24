@@ -20,6 +20,10 @@ class IFlexiTopicTop(IViewletManager):
 class IFlexiTopicForm(IViewletManager):
     ''' Render the seach form '''
 
+class IFlexiTopicFormExt(IViewletManager):
+    ''' insert into the seach form '''
+
+
 class IFlexiTopicBottom(IViewletManager):
     ''' The botom of a flexitopic page
        (the results table)

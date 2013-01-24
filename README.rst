@@ -5,7 +5,8 @@ Flexitopic integrates the easy use of plone collections with a Flexigrid_
 AJAX view. The criteria from the topic are taken to construct a simple
 query form to narrow down a search inside a collection. Subtopics are
 displayed inside tabs of the (old style) collection.
-
+It works with new (`plone.app.collection.Collection`) and
+old (`Products.ATContentTypes.ATTopic`) style collections
 
 
 * Flexitopic does not install a new content type but just adds an additional view to the collection type.
