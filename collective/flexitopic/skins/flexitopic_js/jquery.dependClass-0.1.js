@@ -1,12 +1,17 @@
-/*
- * Depend Class v0.1b : attach class based on first class in list of current element
- * File: jquery.dependClass.js
- * Copyright (c) 2009 Egor Hmelyoff, hmelyoff@gmail.com
- */
-
+/**
+ * jquery.dependClass - Attach class based on first class in list of current element
+ * 
+ * Written by
+ * Egor Khmelev (hmelyoff@gmail.com)
+ *
+ * Licensed under the MIT (MIT-LICENSE.txt).
+ *
+ * @author Egor Khmelev
+ * @version 0.1.0-BETA ($Id$)
+ * 
+ **/
 
 (function($) {
-	// Init plugin function
 	$.baseClass = function(obj){
 	  obj = $(obj);
 	  return obj.get(0).className.match(/([^ ]+)/)[1];
@@ -48,5 +53,4 @@
 		});
 	};
 
-	// end of closure
 })(jQuery);

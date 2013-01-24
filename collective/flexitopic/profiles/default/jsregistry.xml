@@ -1,18 +1,29 @@
 <?xml version="1.0"?>
 <object name="portal_javascripts" meta_type="JavaScripts Registry"
    autogroup="False">
+ <!-- flexigrid production -->
  <javascript cacheable="True" compression="none" cookable="True"
     enabled="True" expression="" id="flexigrid.pack.js" inline="False"/>
+ <!-- flexigrid debug -->
  <javascript cacheable="False" compression="safe" cookable="True"
     enabled="False" expression="" id="flexigrid.js" inline="False"/>
-
- <javascript cacheable="True" compression="safe" cookable="True"
-    enabled="True" expression="" id="jquery.dependClass.js" inline="False"/>
+ <!--JSlider production-->
  <javascript cacheable="True" compression="none" cookable="True"
-    enabled="True" expression="" id="jquery.slider-min.js" inline="False"/>
+    enabled="True" expression="" id="jquery.slider.min.js" inline="False"/>
+ <!-- JSlider debug -->
+ <javascript cacheable="True" compression="safe" cookable="True"
+    enabled="False" expression="" id="jquery.dependClass-01.js" inline="False"/>
  <javascript cacheable="False" compression="safe" cookable="False"
     enabled="False" expression="" id="jquery.slider.js" inline="False"/>
-
+ <javascript cacheable="False" compression="safe" cookable="False"
+    enabled="False" expression="" id="jshashtable-2.1_src.js" inline="False"/>
+ <javascript cacheable="False" compression="safe" cookable="False"
+    enabled="False" expression="" id="draggable-0.1.js" inline="False"/>
+ <javascript cacheable="False" compression="safe" cookable="False"
+    enabled="False" expression="" id="jquery.numberformatter-1.2.3.js" inline="False"/>
+ <javascript cacheable="False" compression="safe" cookable="False"
+    enabled="False" expression="" id="tmpl.js" inline="False"/>
+ <!-- flexitopic specific -->
  <javascript cacheable="True" compression="safe" cookable="True"
     enabled="True" expression="" id="datesliderhelperfunctions.js" inline="False"/>
 </object>

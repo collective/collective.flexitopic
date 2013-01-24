@@ -10,8 +10,10 @@ from plone.registry.interfaces import IRegistry
 
 from collective.flexitopic.interfaces import IFlexiTopicSettings
 from collective.flexitopic import flexitopicMessageFactory as _
-from utils import get_search_results, get_topic_table_fields, get_search_results_ng
-from utils import IDX_METADATA, get_start_end, get_renderd_table
+from utils import get_search_results, get_topic_table_fields
+from utils import IDX_METADATA, DATERANGE_OPERATORS
+from utils import get_start_end, get_renderd_table
+from utils import get_search_results_ng, get_start_end_ng
 
 try:
     from plone.app.querystring import queryparser
@@ -22,6 +24,9 @@ except ImportError:
 KEYWORD_DELIMITER = ':'
 DATE_FIELD_WIDTH = 80
 FG_PADDING_WIDTH = 5
+
+
+
 
 
 class BaseViewlet(base.ViewletBase):
@@ -64,7 +69,38 @@ class SubtopicViewlet(BaseViewlet):
         return stl
 
 class FormViewlet(BaseViewlet):
-    ''' displays the query form for ols style collections'''
+    ''' displays the query form for old style collections'''
+
+    jslider_template = '''
+                <span id="search-%(id)s">
+                    <input type=text"
+                        size="10"
+                        name="start-%(name)s"
+                        id="start-search-%(id)s"
+                        value="%(startval)s" />
+                        -
+                    <input type=text"
+                        size="10"
+                        name="end-%(name)s"
+                        id="end-search-%(id)s"
+                        value="%(endval)s" />
+                    <input id="slider-%(id)s"
+                        type="slider"
+                        style="display:none;"
+                        name="range-%(name)s"
+                        value="%(valrange)s" />
+
+                    <script type="text/javascript" charset="utf-8">
+                      jQuery("#slider-%(id)s").slider({
+                            from: 0,
+                            to: %(to)i,
+                            %(calculate)s,
+                            %(callback)s
+                            });
+                    </script>
+
+                </span>
+            '''
 
     @property
     def portal_catalog(self):
@@ -116,55 +152,26 @@ class FormViewlet(BaseViewlet):
         return item_list
 
 
+    def _daterange_criterion(self, field_name, start_date, form_start, end_date, form_end):
+        date_diff = int(end_date - start_date) + 1
+        i_start = int(DateTime(form_start) - start_date)
+        i_end = int(DateTime(form_end) - start_date)
+        valrange = '%i;%i' % (i_start, i_end)
+        calc_template = self._get_calculate_js(start_date)
+        cb_template = self._get_callback_js(field_name,
+                    start_date)
+        return  self.jslider_template % {
+                'id': field_name,
+                'name': field_name,
+                'startval' : form_start,
+                'endval': form_end,
+                'valrange': valrange,
+                'to': date_diff,
+                'calculate': calc_template,
+                'callback': cb_template}
+
     def get_criteria(self):
         ''' combine request with topic criteria '''
-        def daterange_criterion(criterion):
-            date_diff = int(end_date - start_date) + 1
-            i_start = int(DateTime(startval) - start_date)
-            i_end = int(DateTime(endval) - start_date)
-            valrange = '%i;%i' % (i_start, i_end)
-            calc_template = self._get_calculate_js(start_date)
-            cb_template = self._get_callback_js(criterion.Field(),
-                        start_date)
-            return '''
-                <span id="search-%(id)s">
-                    <input type=text"
-                        size="10"
-                        name="start-%(name)s"
-                        id="start-search-%(id)s"
-                        value="%(startval)s" />
-                        -
-                    <input type=text"
-                        size="10"
-                        name="end-%(name)s"
-                        id="end-search-%(id)s"
-                        value="%(endval)s" />
-                    <input id="slider-%(id)s"
-                        type="slider"
-                        style="display:none;"
-                        name="range-%(name)s"
-                        value="%(valrange)s" />
-
-                    <script type="text/javascript" charset="utf-8">
-                      jQuery("#slider-%(id)s").slider({
-                            from: 0,
-                            to: %(to)i,
-                            %(calculate)s,
-                            %(callback)s
-                            });
-                    </script>
-
-                </span>
-            ''' % { 'id': criterion.Field(),
-                    'name': criterion.Field(),
-                    'startval' : startval,
-                    'endval': endval,
-                    'valrange': valrange,
-                    'to': date_diff,
-                    'calculate': calc_template,
-                    'callback': cb_template}
-
-
         criteria = []
         portal_atct = getToolByName(self.context,'portal_atct')
         for criterion in self.context.listCriteria():
@@ -257,7 +264,11 @@ class FormViewlet(BaseViewlet):
                     endval = self.request.get('end-' + criterion.Field(),
                             end_date.strftime('%Y/%m/%d'))
 
-                    criterion_field['input'] = daterange_criterion(criterion)
+                    criterion_field['input'] = self._daterange_criterion(
+                        criterion.Field(), start_date, startval,
+                        end_date, endval)
+
+                    #criterion_field['input'] = daterange_criterion(criterion)
                 else:
                     criterion_field['input'] = None
                 criteria.append(criterion_field)
@@ -270,7 +281,7 @@ class FormViewletNG(FormViewlet):
     def get_criteria(self):
         ''' combine request with topic criteria '''
         criteria = []
-        #query = queryparser.parseFormquery(self.context, self.context.getRawQuery())
+        query = queryparser.parseFormquery(self.context, self.context.getRawQuery())
         registry = getUtility(IRegistry)
         qsrr = QuerystringRegistryReader(registry)
         for raw_query in self.context.getRawQuery():
@@ -305,6 +316,18 @@ class FormViewletNG(FormViewlet):
                             name="%s"
                             value="%s"/>''' % (id,
                                 raw_query['i'], value)
+            elif raw_query['o'] in DATERANGE_OPERATORS:
+                start_date, end_date = get_start_end_ng(self.context, query,
+                                                raw_query,
+                                                self.portal_catalog)
+                startval = self.request.get('start-' + raw_query['i'],
+                            start_date.strftime('%Y/%m/%d'))
+                endval = self.request.get('end-' + raw_query['i'],
+                            end_date.strftime('%Y/%m/%d'))
+                input_html = self._daterange_criterion(
+                        raw_query['i'], start_date, startval,
+                        end_date, endval)
+
             elif raw_query['o']=='plone.app.querystring.operation.date.largerThanRelativeDate':
                 #within last n days
                 pass
@@ -315,7 +338,7 @@ class FormViewletNG(FormViewlet):
                 pass
             elif raw_query['o']=='plone.app.querystring.operation.date.largerThan':
                 #after date
-                pass
+                import ipdb; ipdb.set_trace()
             elif raw_query['o']=='plone.app.querystring.operation.date.today':
                 pass
             elif raw_query['o']=='plone.app.querystring.operation.date.afterToday':

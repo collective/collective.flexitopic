@@ -1,4 +1,5 @@
 #utils
+import logging
 from zope.component import getUtility
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from DateTime import DateTime
@@ -13,13 +14,24 @@ try:
 except ImportError:
     pass
 
+logger = logging.getLogger('collective.flexitopic')
+
 # just to cheat i18ndude
 title = _('Title')
 phone = _('Phone')
 
 RAM_CACHE_SECONDS = 3600
 
-
+DATERANGE_OPERATORS = [
+    'plone.app.querystring.operation.date.largerThanRelativeDate', #within next n days
+    'plone.app.querystring.operation.date.beforeToday',
+    'plone.app.querystring.operation.date.lessThanRelativeDate', #within last n days
+    'plone.app.querystring.operation.date.largerThan', #after date
+    #'plone.app.querystring.operation.date.today',
+    'plone.app.querystring.operation.date.afterToday',
+    'plone.app.querystring.operation.date.lessThan', # before date
+    'plone.app.querystring.operation.date.between', # between date and date
+    ]
 
 IDX_METADATA = {
         'Title': 'sortable_title',
@@ -64,6 +76,7 @@ def get_date_limit(context, criterion, portal_catalog):
     return date_limit
 
 def get_start_end(flexitopic, criterion, catalog):
+    #for old style collections
     if criterion.meta_type in ['ATDateRangeCriterion']:
         start_date = criterion.getStart()
         end_date = criterion.getEnd()
@@ -76,6 +89,51 @@ def get_start_end(flexitopic, criterion, catalog):
         start_date = min(date_base, date_limit)
         end_date =  max(date_base, date_limit)
     return start_date, end_date
+
+
+def get_first_date(criterion, query, catalog, sort_order):
+    query['sort_on'] = criterion
+    query['sort_limit'] = 1
+    query['sort_order'] = sort_order
+    results = catalog(**query)
+    if len(results) > 0:
+        date_limit = results[0][criterion] #+ adjust
+    else:
+        date_limit = DateTime()
+    return date_limit
+
+def get_max_date(criterion, query, catalog):
+    return get_first_date(criterion, query, catalog, 'descending')
+
+
+def get_min_date(criterion, query, catalog):
+    return get_first_date(criterion, query, catalog, 'ascending')
+
+
+
+def get_start_end_ng(context, query, raw, catalog):
+    if raw['o']=='plone.app.querystring.operation.date.largerThanRelativeDate':
+        #within last n days
+        return query[raw['i']]['query'][0], query[raw['i']]['query'][1]
+    elif raw['o']=='plone.app.querystring.operation.date.beforeToday':
+        return get_min_date(raw['i'], query, catalog), DateTime()
+    elif raw['o']=='plone.app.querystring.operation.date.lessThanRelativeDate':
+        #within next n days
+        return query[raw['i']]['query'][0], query[raw['i']]['query'][1]
+    elif raw['o']=='plone.app.querystring.operation.date.largerThan':
+        #after date
+        return DateTime(raw['v']), get_max_date(raw['i'], query, catalog)
+    elif raw['o']=='plone.app.querystring.operation.date.afterToday':
+        return DateTime(), get_max_date(raw['i'], query, catalog)
+    elif raw['o']=='plone.app.querystring.operation.date.lessThan':
+        # before date
+        return get_min_date(raw['i'], query, catalog), DateTime(raw['v'])
+    elif raw['o']=='plone.app.querystring.operation.date.between':
+        # between date and date
+        return DateTime(raw['v'][0]), DateTime(raw['v'][1])
+    else:
+        logger.error('operation %s not supported' % raw['o'])
+
 
 
 
@@ -224,6 +282,13 @@ def get_search_results_ng(flexitopic):
                         query[raw_query['i']]['query'] = value + ' AND ' + raw_query['v']
                     else:
                         query[raw_query['i']]['query'] = value
+            elif raw_query['o'] in DATERANGE_OPERATORS:
+                start = form.get('start-' + raw_query['i'], False)
+                end = form.get('end-' + raw_query['i'], False)
+                if start and end:
+                    query[raw_query['i']] = {'query':(start, end),
+                                'range': 'min:max'}
+
 
     sortorder = form.get('sortorder',None)
 

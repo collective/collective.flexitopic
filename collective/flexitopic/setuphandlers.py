@@ -23,3 +23,14 @@ def upgrade_registry(context, logger=None):
     setup = getToolByName(context, 'portal_setup')
     setup.runImportStepFromProfile(PROFILE_ID, 'plone.app.registry')
     return
+
+def update_js(context, logger=None):
+    """Re-import the portal configuration registry settings.
+    """
+    if logger is None:
+        # Called as upgrade step: define our own logger.
+        logger = logging.getLogger('collective.flexitopic')
+    logger.info("Update javascripts")
+    setup = getToolByName(context, 'portal_setup')
+    setup.runImportStepFromProfile(PROFILE_ID, 'jsregistry')
+    return

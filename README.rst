@@ -12,8 +12,8 @@ displayed inside tabs of the (old style) collection.
 * it degrades for non javascript browsers to a simple table - (almost) same usability, no information loss.
 * it requires JQuery only (built into plone 4) no JQuery UI
 * lightweight JS
-      * Flexigrid_: 24 KB packed
-      * JSlider_: 15 KB packed
+      * Flexigrid_: 27 KB packed
+      * JSlider_: 22 KB packed
 
 
 .. _Flexigrid: http://flexigrid.info/

@@ -30,6 +30,6 @@ line-height: 1em;
 }
 
 .flexigrid div.hDivBox table {
-margin-bottom: 0;
+margin-bottom: 0 !important;
 }
 
