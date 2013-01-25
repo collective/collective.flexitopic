@@ -407,6 +407,11 @@ class JsViewlet(BaseViewlet):
          $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
         }) ;
    });
+   $('#flexitopicsearchform').find('input:radio').each(function(i) {
+     $(this).change(function( objEvent ){
+         $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
+        }) ;
+   });
  });
 
     $("#flexitopicresults").flexigrid
