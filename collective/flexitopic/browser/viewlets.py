@@ -71,7 +71,7 @@ class SubtopicViewlet(BaseViewlet):
 class FormViewlet(BaseViewlet):
     ''' displays the query form for old style collections'''
 
-    jslider_template = '''
+    jslider_template = u'''
                 <span id="search-%(id)s">
                     <input type=text"
                         size="10"
@@ -107,7 +107,7 @@ class FormViewlet(BaseViewlet):
         return getToolByName(self.context, 'portal_catalog')
 
     def _get_calculate_js(self, start_date):
-        js_ctemplate = '''
+        js_ctemplate = u'''
                 calculate: function( value ){
                     var start_date = new Date('%(start)s');
                     var the_date = datesliderhelper.add_date(start_date, value);
@@ -116,7 +116,7 @@ class FormViewlet(BaseViewlet):
         return js_ctemplate % { 'start': start_date.strftime('%Y/%m/%d')}
 
     def _get_callback_js(self, name, start_date):
-        js_cbtemplate = '''
+        js_cbtemplate = u'''
                 callback: function( value ){
                     var values = value.split(';');
                     var start_date = new Date('%(start)s');
@@ -133,22 +133,23 @@ class FormViewlet(BaseViewlet):
 
     def _sel(self, item, selected):
         if item == selected:
-            return 'selected="selected"'
+            return u'selected="selected"'
         else:
-            return ''
+            return u''
 
     def _get_index_values(self, idx):
         items = list(self.portal_catalog.Indexes[
                 idx].uniqueValues())
         selected = self.request.get(idx,None)
         items.sort()
-        item_list =  [{'name': _('All'), 'value':'',
-                'disabled':None,
-                'selected':self._sel(None,selected)}]
+        item_list =  [{u'name': _(u'All'), u'value':u'',
+                u'disabled':None,
+                u'selected':self._sel(None,selected)}]
         for item in items:
-            item_list.append({'name': item, 'value':item,
-                    'disabled': None,
-                    'selected':self._sel(item,selected)})
+            item_list.append({u'name': item.decode('utf-8'),
+                    u'value':item.decode('utf-8'),
+                    u'disabled': None,
+                    u'selected':self._sel(item,selected)})
         return item_list
 
 
@@ -156,7 +157,7 @@ class FormViewlet(BaseViewlet):
         date_diff = int(end_date - start_date) + 1
         i_start = int(DateTime(form_start) - start_date)
         i_end = int(DateTime(form_end) - start_date)
-        valrange = '%i;%i' % (i_start, i_end)
+        valrange = u'%i;%i' % (i_start, i_end)
         calc_template = self._get_calculate_js(start_date)
         cb_template = self._get_callback_js(field_name,
                     start_date)
@@ -187,7 +188,7 @@ class FormViewlet(BaseViewlet):
                     }
                 if criterion.meta_type=='ATSimpleStringCriterion':
                     value = self.request.get(criterion.Field(),'')
-                    criterion_field['input'] = '''<input type="text"
+                    criterion_field['input'] = u'''<input type="text"
                             size="25"
                             name="%s"
                             id="search-%s"
@@ -219,7 +220,7 @@ class FormViewlet(BaseViewlet):
                                     'value': idx_value,
                                     'selected': is_selected,
                                     'name': idx_name}
-                            criterion_field['input'] = '''
+                            criterion_field['input'] = u'''
                                     <select id="%s" name="%s">
                                     %s
                                     </select>''' % ( criterion.Field(),
@@ -235,7 +236,7 @@ class FormViewlet(BaseViewlet):
                                     continue
                                 else:
                                     options += u'<option value="%(value)s" %(selected)s >%(name)s</option>' % idx_value
-                            criterion_field['input'] = '''
+                            criterion_field['input'] = u'''
                                 <select id="%s" name="%s">
                                 %s
                                 </select>''' % ( criterion.Field(),
@@ -247,7 +248,7 @@ class FormViewlet(BaseViewlet):
                         idx_values = self._get_index_values(criterion.Field())
                         for idx_value in idx_values:
                             options += u'<option value="%(value)s" %(selected)s >%(name)s</option>' % idx_value
-                        criterion_field['input'] = '''
+                        criterion_field['input'] = u'''
                             <select id="%s" name="%s">
                             %s
                             </select>''' % ( criterion.Field(),
@@ -303,14 +304,14 @@ class FormViewletNG(FormViewlet):
                                         'value': value,
                                         'selected': is_selected,
                                         'name': value}
-                    input_html = '''
+                    input_html = u'''
                         <select id="%s" name="%s">
                         %s
                         </select>''' % ( id,
                             raw_query['i'], options)
             elif raw_query['o']=='plone.app.querystring.operation.string.contains':
                 value = self.request.get(raw_query['i'],'')
-                input_html = '''<input type="text"
+                input_html = u'''<input type="text"
                             size="25"
                             id="search-%s"
                             name="%s"
