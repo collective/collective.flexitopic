@@ -3,13 +3,14 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:cache="http://namespaces.zope.org/cache"
     i18n_domain="collective.flexitopic">
     <!-- -*- extra stuff goes here -*- -->
 
   <include package="plone.app.contentmenu" />
   <include package="Products.CMFCore" file="configure.zcml" />
   <include package="plone.app.registry" />
-
+  <include package="z3c.caching" file="meta.zcml" />
 
   <browser:menuItem
       zcml:condition="installed plone.app.collection"
@@ -41,7 +42,10 @@
       permission="zope2.View"
       />
 
-
+  <cache:ruleset
+      for=".flexijsonview.FlexiJsonView"
+      ruleset="plone.content.folderView"
+      />
 
   <browser:page
       for="Products.ATContentTypes.interfaces.topic.IATTopic"
@@ -51,6 +55,12 @@
       allowed_interface=".flexitopicview.IFlexiTopicView"
       layer = "..interfaces.IFlexiTopicLayer"
       permission="zope2.View"
+      />
+
+
+  <cache:ruleset
+      for=".flexitopicview.FlexiTopicView"
+      ruleset="plone.content.folderView"
       />
 
   <!-- New style collections -->
@@ -64,6 +74,13 @@
       layer = "..interfaces.IFlexiTopicLayer"
       permission="zope2.View"/>
 
+
+  <cache:ruleset
+      for=".flexitopicview.FlexiCollectionView"
+      ruleset="plone.content.folderView"
+      />
+
+
   <browser:page
       zcml:condition="installed plone.app.collection"
       for="plone.app.collection.interfaces.ICollection"
@@ -74,6 +91,10 @@
       permission="zope2.View"
       />
 
+  <cache:ruleset
+      for=".flexijsonview.FlexiJsonViewNG"
+      ruleset="plone.content.folderView"
+      />
 
     <!-- Control panel -->
     <browser:page

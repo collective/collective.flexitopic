@@ -66,13 +66,30 @@ Subtopics (old style collections only)
 
 Installation
 ============
-Install collective.flexitopic as part of a specific project's buildout.
-Add to buildouts configuration such as::
+
+This addon can be installed has any other addons, please follow official
+documentation_.
+
+.. _documentation: http://plone.org/documentation/kb/installing-add-ons-quick-how-to
+
+Add to buildouts configuration
+
+::
 
     [buildout]
     ...
     eggs =
         collective.flexitopic
+
+Re-run buildout, e.g. with
+
+::
+
+    $ ./bin/buildout
+
+Restart Plone and activate the product in Plones Add-on configuration
+section.
+
 
 Participation
 =============

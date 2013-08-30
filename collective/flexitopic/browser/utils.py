@@ -1,12 +1,14 @@
 #utils
 import logging
+from time import time
+from DateTime import DateTime
 from zope.component import getUtility
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
-from DateTime import DateTime
 from plone.memoize import ram
-from time import time
 
+from plone.app.querystring import queryparser
 from plone.registry.interfaces import IRegistry
+
 from collective.flexitopic.interfaces import IFlexiTopicSettings
 from collective.flexitopic import flexitopicMessageFactory as _
 try:

@@ -5,7 +5,7 @@ Changelog
 ---
 
 - support for plone.app.collection
-
+- add caching
 
 0.4
 ---
