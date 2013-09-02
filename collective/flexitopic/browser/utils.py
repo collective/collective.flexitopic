@@ -5,8 +5,10 @@ from DateTime import DateTime
 from zope.component import getUtility
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from plone.memoize import ram
-
-from plone.app.querystring import queryparser
+try:
+    from plone.app.querystring import queryparser
+except ImportError:
+    pass
 from plone.registry.interfaces import IRegistry
 
 from collective.flexitopic.interfaces import IFlexiTopicSettings
@@ -18,11 +20,13 @@ except ImportError:
 
 logger = logging.getLogger('collective.flexitopic')
 
+logger.setLevel(logging.DEBUG)
+
 # just to cheat i18ndude
 title = _('Title')
 phone = _('Phone')
 
-RAM_CACHE_SECONDS = 3600
+RAM_CACHE_SECONDS = 60
 
 DATERANGE_OPERATORS = [
     'plone.app.querystring.operation.date.largerThanRelativeDate', #within next n days
@@ -259,13 +263,14 @@ def get_search_results(flexitopic):
         if sort_order:
             query['sort_order'] = sort_order
 
-    if 'zgeo_geometry' in form.keys() and 'zgeo_geometry' in catalog.Indexes.keys():
-        geometry_operator = form.get('zgeo_geometry_usage', 'geometry_operator:within')
-        assert(geometry_operator.split(':')[0] == 'geometry_operator')
-        bbox = [int(float(c)) for c in form['zgeo_geometry'].split(',')]
-        if bbox != [-180, -90, 180, 90]:
-            query['zgeo_geometry'] = {'query': form['zgeo_geometry'],
-                'geometry_operator': geometry_operator.split(':')[1]}
+    #if 'zgeo_geometry' in form.keys() and 'zgeo_geometry' in catalog.Indexes.keys():
+    #    geometry_operator = form.get('zgeo_geometry_usage', 'geometry_operator:within')
+    #    assert(geometry_operator.split(':')[0] == 'geometry_operator')
+    #    bbox = [int(float(c)) for c in form['zgeo_geometry'].split(',')]
+    #    if bbox != [-180, -90, 180, 90]:
+    #        query['zgeo_geometry'] = {'query': form['zgeo_geometry'],
+    #            'geometry_operator': geometry_operator.split(':')[1]}
+    logger.error(query)
     results = catalog(**query)
 
     return {'results': results, 'size': batch_size,
@@ -279,7 +284,6 @@ def get_search_results_ng(flexitopic):
     catalog = flexitopic.portal_catalog
     query = queryparser.parseFormquery(flexitopic.context,
             flexitopic.context.getRawQuery())
-    catalog.Indexes
     for raw_query in flexitopic.context.getRawQuery():
             value = form.get(raw_query['i'], False)
             if value:
@@ -323,13 +327,14 @@ def get_search_results_ng(flexitopic):
         query['sort_on'] = sort_on
         if sort_order:
             query['sort_order'] = sort_order
-    if 'zgeo_geometry' in form.keys() and 'zgeo_geometry' in catalog.Indexes.keys():
-        geometry_operator = form.get('zgeo_geometry_usage', 'geometry_operator:within')
-        assert(geometry_operator.split(':')[0] == 'geometry_operator')
-        bbox = [int(float(c)) for c in form['zgeo_geometry'].split(',')]
-        if bbox != [-180, -90, 180, 90]:
-            query['zgeo_geometry'] = {'query': form['zgeo_geometry'],
-                'geometry_operator': geometry_operator.split(':')[1]}
+    #if 'zgeo_geometry' in form.keys() and 'zgeo_geometry' in catalog.Indexes.keys():
+    #    geometry_operator = form.get('zgeo_geometry_usage', 'geometry_operator:within')
+    #    assert(geometry_operator.split(':')[0] == 'geometry_operator')
+    #    bbox = [int(float(c)) for c in form['zgeo_geometry'].split(',')]
+    #    if bbox != [-180, -90, 180, 90]:
+    #        query['zgeo_geometry'] = {'query': form['zgeo_geometry'],
+    #            'geometry_operator': geometry_operator.split(':')[1]}
+    logger.debug(query)
     results = catalog(**query)
     return {'results': results, 'size': batch_size,
         'start': batch_start, 'num_results': len(results)}
