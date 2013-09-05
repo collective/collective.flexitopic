@@ -178,7 +178,7 @@ def _search_result_cachekey(fun, flexitopic):
     return ckey
 
 
-#@ram.cache(_search_result_cachekey)
+@ram.cache(_search_result_cachekey)
 def get_search_results(flexitopic):
     form = flexitopic.request.form
 
@@ -231,12 +231,6 @@ def get_search_results(flexitopic):
                         query[criterion.Field()] = value
         else:
             continue
-            if criterion.getCriteriaItems():
-                if criterion.meta_type in ['ATSortCriterion',]:
-                    continue
-                else:
-                    assert(criterion.getCriteriaItems()[0][0]==criterion.Field())
-                    query[criterion.Field()] = criterion.getCriteriaItems()[0][1]
 
     sortorder = form.get('sortorder',None)
 
@@ -264,14 +258,7 @@ def get_search_results(flexitopic):
         if sort_order:
             query['sort_order'] = sort_order
 
-    #if 'zgeo_geometry' in form.keys() and 'zgeo_geometry' in catalog.Indexes.keys():
-    #    geometry_operator = form.get('zgeo_geometry_usage', 'geometry_operator:within')
-    #    assert(geometry_operator.split(':')[0] == 'geometry_operator')
-    #    bbox = [int(float(c)) for c in form['zgeo_geometry'].split(',')]
-    #    if bbox != [-180, -90, 180, 90]:
-    #        query['zgeo_geometry'] = {'query': form['zgeo_geometry'],
-    #            'geometry_operator': geometry_operator.split(':')[1]}
-
+    logger.debug(query)
     results = catalog(**query)
 
     return {'results': results, 'size': batch_size,
@@ -328,13 +315,6 @@ def get_search_results_ng(flexitopic):
         query['sort_on'] = sort_on
         if sort_order:
             query['sort_order'] = sort_order
-    #if 'zgeo_geometry' in form.keys() and 'zgeo_geometry' in catalog.Indexes.keys():
-    #    geometry_operator = form.get('zgeo_geometry_usage', 'geometry_operator:within')
-    #    assert(geometry_operator.split(':')[0] == 'geometry_operator')
-    #    bbox = [int(float(c)) for c in form['zgeo_geometry'].split(',')]
-    #    if bbox != [-180, -90, 180, 90]:
-    #        query['zgeo_geometry'] = {'query': form['zgeo_geometry'],
-    #            'geometry_operator': geometry_operator.split(':')[1]}
     logger.debug(query)
     results = catalog(**query)
     return {'results': results, 'size': batch_size,

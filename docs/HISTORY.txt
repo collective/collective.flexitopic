@@ -1,45 +1,56 @@
 Changelog
 =========
 
-0.5
----
+0.6 (2013/09/05)
+----------------
+
+- move bodytext above searchform
+- use_view_actions
+- upgrade js registry
+- do not use description as html attribute title on Title
+- bug fixes
+- cache search results
+
+
+0.5 (2013/08/30)
+----------------
 
 - support for plone.app.collection
 - add caching
 
-0.4
----
+0.4 (20011/12/06)
+------------------
 
 - make date columns smaller
 - remove minimize button from table
 
 
-0.3
----
+0.3 (2011/06/17)
+-----------------
 
 - plone 4.1 compatible
 - upgrade flexigrid to ver 1.1
 
 
-0.2
----
+0.2 (2011/04/05)
+-----------------
 
 - do not display review state in searchform
--  split monolithic flexitopic_view into several viewlets
--  get items per page out of topic
--  render html table into a noscript area, flexigrid into an empty table
+- split monolithic flexitopic_view into several viewlets
+- get items per page out of topic
+- render html table into a noscript area, flexigrid into an empty table
 
 
-0.1
----
+0.1 (2011/01/27)
+-----------------
 
 - First public release
--  Add slider to query for date ranges
--  Caching for expensive catalog queries
+- Add slider to query for date ranges
+- Caching for expensive catalog queries
 
 0.1dev (unreleased)
 -------------------
 
 - Initial release
--  Flexigrid to display search results
--  Generate search form from collection criteria
+- Flexigrid to display search results
+- Generate search form from collection criteria
