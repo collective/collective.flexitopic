@@ -34,6 +34,14 @@
       handler="collective.flexitopic.setuphandlers.upgrade_registry"
       profile="collective.flexitopic:default" />
 
+  <genericsetup:upgradeStep
+      title="Upgrade Javascripts"
+      description="Upgrade JavaScript"
+      source="*"
+      destination="4"
+      handler="collective.flexitopic.setuphandlers.update_js"
+      profile="collective.flexitopic:default" />
+
   <!-- -*- extra stuff goes here -*- -->
 
   <include package=".browser" />

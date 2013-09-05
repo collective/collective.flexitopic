@@ -9,15 +9,13 @@
             <h1 class="documentFirstHeading" tal:content="context/Title">
                 Title
             </h1>
-
             <div tal:replace="structure provider:plone.belowcontenttitle" />
             <div tal:replace="structure provider:collective.flexitopic.top" />
-
+            <div tal:content="structure here/getText">
+                Body Text
+            </div>
             <div tal:replace="structure provider:collective.flexitopic.form" />
             <div tal:replace="structure provider:collective.flexitopic.table" />
-            <div tal:content="structure here/getText">
-            Body Text
-            </div>
             <div tal:replace="structure provider:collective.flexitopic.javascript" />
         </tal:main-macro>
     </div>

@@ -185,17 +185,17 @@ def get_search_results(flexitopic):
     batch_size = form.get('b_size', 20)
     batch_start = form.get('b_start', 0)
     catalog = flexitopic.portal_catalog
-    query = {}
+    query = flexitopic.context.buildQuery()
     for criterion in flexitopic.context.listCriteria():
         if criterion.meta_type in ['ATDateRangeCriterion',
                                     'ATFriendlyDateCriteria']:
             start_date, end_date = get_start_end(flexitopic, criterion, catalog)
-            value = (flexitopic.request.get('start-' + criterion.Field(),
+            value = (form.get('start-' + criterion.Field(),
                             start_date.strftime('%Y/%m/%d')),
-                    flexitopic.request.get('end-' + criterion.Field(),
+                    form.get('end-' + criterion.Field(),
                             end_date.strftime('%Y/%m/%d')))
         else:
-            value = flexitopic.request.get(criterion.Field(),None)
+            value = form.get(criterion.Field(),None)
         if value:
             query[criterion.Field()] = {}
             if hasattr(criterion, 'getOperator'):
@@ -230,6 +230,7 @@ def get_search_results(flexitopic):
                     else:
                         query[criterion.Field()] = value
         else:
+            continue
             if criterion.getCriteriaItems():
                 if criterion.meta_type in ['ATSortCriterion',]:
                     continue
@@ -270,7 +271,7 @@ def get_search_results(flexitopic):
     #    if bbox != [-180, -90, 180, 90]:
     #        query['zgeo_geometry'] = {'query': form['zgeo_geometry'],
     #            'geometry_operator': geometry_operator.split(':')[1]}
-    logger.error(query)
+
     results = catalog(**query)
 
     return {'results': results, 'size': batch_size,

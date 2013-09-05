@@ -32,6 +32,10 @@ class FlexiJsonView(BrowserView):
         self.request = request
 
     @property
+    def site_properties(self):
+        return getToolByName(self.context, 'portal_properties').site_properties
+
+    @property
     def portal_catalog(self):
         return getToolByName(self.context, 'portal_catalog')
 
@@ -60,8 +64,8 @@ class FlexiJsonView(BrowserView):
             "total":len(results),
             "rows":[]}
         fields = get_topic_table_fields(self.context, self.portal_catalog)
-        a = u'<a href="%s" title="%s">%s %s</a>'
         layout = getMultiAdapter((self.context, self.request), name=u'plone_layout')
+        use_view_action = self.site_properties.typesUseViewActionInListings
         for result in results[start:end]:
             cell = []
             icon = layout.getIcon(result)
@@ -89,9 +93,11 @@ class FlexiJsonView(BrowserView):
                             request=self.request)
                     cell.append(dateval)
                 elif field['name']=='Title':
-                    cell.append(a % (result.getURL(),
-                        result.Description.decode('utf-8', 'ignore').encode('ascii', 'xmlcharrefreplace'),
-                        icon_snp, value))
+                    if result.portal_type in use_view_action:
+                        a = u'<a href="%s/view">%s %s</a>'
+                    else:
+                        a = u'<a href="%s">%s %s</a>'
+                    cell.append(a % (result.getURL(), icon_snp, value))
                 elif type(value)==tuple:
                     cell.append(', '.join(getattr(result, field['name'])))
                 else:

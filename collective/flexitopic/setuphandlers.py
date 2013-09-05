@@ -25,7 +25,7 @@ def upgrade_registry(context, logger=None):
     return
 
 def update_js(context, logger=None):
-    """Re-import the portal configuration registry settings.
+    """Re-import the portal javascript settings.
     """
     if logger is None:
         # Called as upgrade step: define our own logger.
