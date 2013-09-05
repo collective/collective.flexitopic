@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.6.1 (2013/09/05)
+-------------------
+
+- do not cache results (persistent objects cannot be cached)
+
 0.6 (2013/09/05)
 ----------------
 

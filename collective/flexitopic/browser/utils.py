@@ -171,14 +171,6 @@ def get_topic_table_fields(context, catalog):
     return field_list
 
 
-def _search_result_cachekey(fun, flexitopic):
-    ckey = [flexitopic.request.form]
-    ckey.append(flexitopic.context.getPhysicalPath())
-    ckey.append(time() // RAM_CACHE_SECONDS)
-    return ckey
-
-
-@ram.cache(_search_result_cachekey)
 def get_search_results(flexitopic):
     form = flexitopic.request.form
 
