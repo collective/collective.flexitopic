@@ -104,7 +104,7 @@ class FlexiJsonView(BrowserView):
                     cell.append(value)
 
             json_result['rows'].append(
-                {"id":result.getId,"cell":cell})
+                {"id":result.UID,"cell":cell})
 
         self.request.RESPONSE.setHeader('Content-Type','application/json; charset=utf-8')
         return json.dumps(json_result)
