@@ -1,3 +1,5 @@
+import logging
+
 from DateTime import DateTime
 from zope.component import getUtility
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
@@ -26,6 +28,7 @@ DATE_FIELD_WIDTH = 80
 FG_PADDING_WIDTH = 5
 
 
+logger = logging.getLogger('collective.flexitopic.viewlets')
 
 
 
@@ -330,27 +333,23 @@ class FormViewletNG(FormViewlet):
                         end_date, endval)
 
             elif raw_query['o']=='plone.app.querystring.operation.date.largerThanRelativeDate':
-                #within last n days
-                pass
+                logger.error('should never reach here')
             elif raw_query['o']=='plone.app.querystring.operation.date.beforeToday':
-                pass
+                logger.error('should never reach here')
             elif raw_query['o']=='plone.app.querystring.operation.date.lessThanRelativeDate':
-                #within next n days
-                pass
+                logger.error('should never reach here')
             elif raw_query['o']=='plone.app.querystring.operation.date.largerThan':
-                #after date
-                import ipdb; ipdb.set_trace()
+                logger.error('should never reach here')
             elif raw_query['o']=='plone.app.querystring.operation.date.today':
-                pass
+                logger.info('today not a daterange')
             elif raw_query['o']=='plone.app.querystring.operation.date.afterToday':
-                pass
+                logger.error('should never reach here')
             elif raw_query['o']=='plone.app.querystring.operation.date.lessThan':
-                # before date
-                pass
+                logger.error('should never reach here')
             elif raw_query['o']=='plone.app.querystring.operation.date.between':
-                # between date and date
-                pass
+                logger.error('should never reach here')
             else:
+                logger.error('unhandled criterium')
                 continue
 
             criterion_field = {
@@ -501,7 +500,7 @@ class JsViewlet(BaseViewlet):
             else:
                 sortable='false'
             tl.append( t % (self.context.translate(_(field['label'])),
-                        field['name'], this_field_width, sortable))
+                        field['idx_name'], this_field_width, sortable))
         sort = ''
         if hasattr(self.context, 'listCriteria'):
             #old style collection

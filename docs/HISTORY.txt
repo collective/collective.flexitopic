@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.6.2 (2013/09/06)
+-------------------
+
+-  use UID instead of getId for a cells id (fixes cell misalignments)
+
 0.6.1 (2013/09/05)
 -------------------
 

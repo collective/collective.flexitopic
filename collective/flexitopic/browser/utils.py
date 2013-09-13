@@ -20,7 +20,6 @@ except ImportError:
 
 logger = logging.getLogger('collective.flexitopic')
 
-logger.setLevel(logging.DEBUG)
 
 # just to cheat i18ndude
 title = _('Title')
@@ -49,6 +48,9 @@ IDX_METADATA = {
 def _datelimit_cachekey(fun, context, criterion, portal_catalog):
     query = context.buildQuery()
     query.pop(criterion.Field(),None)
+    query.pop('sort_on', None)
+    query.pop('sort_limit', None)
+    query.pop('sort_order', None)
     ckey = list(context.getPhysicalPath())
     for dcriterion in context.listCriteria():
         if dcriterion.meta_type in ['ATFriendlyDateCriteria']:
@@ -160,14 +162,15 @@ def get_topic_table_fields(context, catalog):
     col_width = int(settings.flexitopic_width/len(fields))
     for field in fields:
         if field in IDX_METADATA.keys():
-            idx = catalog.Indexes[IDX_METADATA[field]].meta_type
+            idx_name = IDX_METADATA[field]
+            idx = catalog.Indexes[idx_name].meta_type
         elif field in catalog.Indexes.keys():
             idx = catalog.Indexes[field].meta_type
         else:
             idx = None
         name = vocab.getValue(field, field)
         field_list.append({'name': field, 'label': name, 'idx_type': idx,
-                            'col_width': col_width})
+                           'idx_name': idx_name, 'col_width': col_width})
     return field_list
 
 
@@ -178,6 +181,7 @@ def get_search_results(flexitopic):
     batch_start = form.get('b_start', 0)
     catalog = flexitopic.portal_catalog
     query = flexitopic.context.buildQuery()
+    query.pop('sort_order', None)
     for criterion in flexitopic.context.listCriteria():
         if criterion.meta_type in ['ATDateRangeCriterion',
                                     'ATFriendlyDateCriteria']:
@@ -225,7 +229,6 @@ def get_search_results(flexitopic):
             continue
 
     sortorder = form.get('sortorder',None)
-
     if sortorder=='desc':
         sort_order = 'reverse'
     else:
@@ -264,6 +267,7 @@ def get_search_results_ng(flexitopic):
     catalog = flexitopic.portal_catalog
     query = queryparser.parseFormquery(flexitopic.context,
             flexitopic.context.getRawQuery())
+    query.pop('sort_order', None)
     for raw_query in flexitopic.context.getRawQuery():
             value = form.get(raw_query['i'], False)
             if value:
