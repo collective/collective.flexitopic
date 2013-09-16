@@ -550,10 +550,12 @@ class JsViewlet(BaseViewlet):
             #XXX
             items_ppage = self.topic.getItemCount()
         except AttributeError:
-            items_ppage = settings.items_pp
+            #XXX
+            items_ppage = self.settings.items_pp
         add_form_data_js = self.add_form_data_js % self.topic.absolute_url()
         if items_ppage==0:
-            items_ppage = settings.items_pp
+            #XXX
+            items_ppage = self.settings.items_pp
         js = self.js_template % {
                 'url': url,
                 'col_model': ', '.join(tl),
