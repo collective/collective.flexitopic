@@ -42,7 +42,17 @@
       handler="collective.flexitopic.setuphandlers.update_js"
       profile="collective.flexitopic:default" />
 
+  <genericsetup:upgradeStep
+      title="Rgister Portlet"
+      description="Register Flexitopic portlet"
+      source="*"
+      destination="5"
+      handler="collective.flexitopic.setuphandlers.add_portlet"
+      profile="collective.flexitopic:default" />
   <!-- -*- extra stuff goes here -*- -->
+
+  <include package=".portlets" />
+
 
   <include package=".browser" />
   <include package="plone.app.registry" />

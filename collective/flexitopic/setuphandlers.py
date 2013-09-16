@@ -34,3 +34,13 @@ def update_js(context, logger=None):
     setup = getToolByName(context, 'portal_setup')
     setup.runImportStepFromProfile(PROFILE_ID, 'jsregistry')
     return
+
+def add_portlet(context, logger=None):
+    if logger is None:
+        # Called as upgrade step: define our own logger.
+        logger = logging.getLogger('collective.flexitopic')
+    logger.info("register portlets")
+    setup = getToolByName(context, 'portal_setup')
+    setup.runImportStepFromProfile(PROFILE_ID, 'portlets')
+    return
+

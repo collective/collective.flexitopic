@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="collective.flexitopic">
+  <!-- Ensure Plone's portlets ZCML has already been processed; without
+       this, we may get a permission lookup error
+  -->
+  <include package="plone.app.portlets" />
+  <!-- -*- extra stuff goes here -*- -->
+
+  <plone:portlet
+      name="collective.flexitopic.portlets.FlexiTopicPortlet"
+      interface=".flexitopicportlet.IFlexiTopicPortlet"
+      assignment=".flexitopicportlet.Assignment"
+      view_permission="zope2.View"
+      edit_permission="cmf.ManagePortal"
+      renderer=".flexitopicportlet.Renderer"
+      addview=".flexitopicportlet.AddForm"
+      editview=".flexitopicportlet.EditForm"
+      />
+
+
+    <!-- viewlet managers to insert content into flexitopicview -->
+
+    <browser:viewletManager
+        name="collective.flexitopic.portletform"
+        provides=".interfaces.IFlexiTopicForm"
+        permission="zope2.View"
+        class="plone.app.viewletmanager.manager.OrderedViewletManager"
+        />
+
+
+
+    <!--browser:viewletManager
+        name="collective.flexitopic.portletjavascript"
+        provides=".interfaces.IFlexiTopicJs"
+        permission="zope2.View"
+        class="plone.app.viewletmanager.manager.OrderedViewletManager"
+        /-->
+
+
+
+    <browser:viewlet
+        view=".flexitopicportlet.Renderer"
+        name="collective.flexitopic.portlet.searchform"
+        manager=".interfaces.IFlexiTopicForm"
+        for="*"
+        layer="..interfaces.IFlexiTopicLayer"
+        class=".viewlets.FormViewlet"
+        permission="zope2.View"
+        />
+
+    <browser:viewletManager
+        name="collective.flexitopic.portlettable"
+        provides=".interfaces.IFlexiTopicTable"
+        permission="zope2.View"
+        class="plone.app.viewletmanager.manager.OrderedViewletManager"
+        />
+
+    <browser:viewlet
+        view=".flexitopicportlet.Renderer"
+        name="collective.flexitopic.portlet.flexigrid"
+        manager=".interfaces.IFlexiTopicTable"
+        layer="..interfaces.IFlexiTopicLayer"
+        class=".viewlets.FlexigridViewlet"
+        permission="zope2.View"
+        />
+
+    <browser:viewlet
+        view=".flexitopicportlet.Renderer"
+        name="collective.flexitopic.portlet.resulttable"
+        manager=".interfaces.IFlexiTopicTable"
+        for="*"
+        layer="..interfaces.IFlexiTopicLayer"
+        class=".viewlets.ResultTableViewlet"
+        permission="zope2.View"
+        />
+
+
+    <browser:viewletManager
+        name="collective.flexitopic.portletjavascript"
+        provides=".interfaces.IFlexiTopicJs"
+        permission="zope2.View"
+        class="plone.app.viewletmanager.manager.OrderedViewletManager"
+        />
+
+
+    <browser:viewlet
+        view=".flexitopicportlet.Renderer"
+        name="collective.flexitopic.portlet.defaultjs"
+        manager=".interfaces.IFlexiTopicJs"
+        layer="..interfaces.IFlexiTopicLayer"
+        class=".viewlets.JsViewlet"
+        permission="zope2.View"
+        />
+
+
+</configure>

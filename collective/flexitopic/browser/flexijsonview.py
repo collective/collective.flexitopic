@@ -30,6 +30,7 @@ class FlexiJsonView(BrowserView):
     def __init__(self, context, request):
         self.context = context
         self.request = request
+        self.topic = self.context
 
     @property
     def site_properties(self):

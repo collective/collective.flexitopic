@@ -74,6 +74,12 @@ class SubtopicViewlet(BaseViewlet):
 class FormViewlet(BaseViewlet):
     ''' displays the query form for old style collections'''
 
+    render = ViewPageTemplateFile("templates/searchform.pt")
+
+    def __init__(self, context, request, view, manager=None):
+        super(FormViewlet, self).__init__(context, request, view, manager)
+        self.topic = context
+
     jslider_template = u'''
                 <span id="search-%(id)s">
                     <input type=text"
@@ -104,6 +110,10 @@ class FormViewlet(BaseViewlet):
 
                 </span>
             '''
+
+
+    def get_view_name(self):
+        return self.context.absolute_url() + '/@@' + self.view.__name__
 
     @property
     def portal_catalog(self):
@@ -178,7 +188,7 @@ class FormViewlet(BaseViewlet):
         ''' combine request with topic criteria '''
         criteria = []
         portal_atct = getToolByName(self.context,'portal_atct')
-        for criterion in self.context.listCriteria():
+        for criterion in self.topic.listCriteria():
             if criterion.meta_type in ['ATSimpleStringCriterion',
                 'ATSelectionCriterion', 'ATListCriterion',
                 'ATDateRangeCriterion', 'ATFriendlyDateCriteria']:
@@ -364,13 +374,20 @@ class FormViewletNG(FormViewlet):
 
 class FlexigridViewlet(BaseViewlet):
     ''' displays the flexigrid results'''
+    render = ViewPageTemplateFile("templates/flexigrid.pt")
 
 class ResultTableViewlet(BaseViewlet):
     '''plain html results table '''
 
 
+    render = ViewPageTemplateFile("templates/resulttable.pt")
+
+    def __init__(self, context, request, view, manager=None):
+        super(ResultTableViewlet, self).__init__(context, request, view, manager)
+        self.topic = context
+
     def get_table_fields(self):
-        return get_topic_table_fields(self.context, self.portal_catalog)
+        return get_topic_table_fields(self.topic, self.portal_catalog)
 
     def render_table(self, search_results):
         return get_renderd_table(self, search_results)
@@ -399,6 +416,11 @@ class JsViewlet(BaseViewlet):
 
     render = ViewPageTemplateFile("templates/jstemplate.pt")
 
+    def __init__(self, context, request, view, manager=None):
+        super(JsViewlet, self).__init__(context, request, view, manager)
+        self.topic = context
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(IFlexiTopicSettings)
 
     js_template = """
  $(document).ready(function() {
@@ -470,11 +492,10 @@ class JsViewlet(BaseViewlet):
                 if self.portal_catalog.Indexes[sortname].meta_type in ['DateIndex']:
                     return True
             return False
-        fields = get_topic_table_fields(self.context, self.portal_catalog)
-        registry = getUtility(IRegistry)
-        settings = registry.forInterface(IFlexiTopicSettings)
-        width=settings.flexitopic_width
-        height=settings.flexitopic_height
+        fields = get_topic_table_fields(self.topic, self.portal_catalog)
+
+        width=self.settings.flexitopic_width
+        height=self.settings.flexitopic_height
         i_date = 0
         for field in fields:
             if is_date(field['name']):
@@ -502,9 +523,9 @@ class JsViewlet(BaseViewlet):
             tl.append( t % (self.context.translate(_(field['label'])),
                         field['idx_name'], this_field_width, sortable))
         sort = ''
-        if hasattr(self.context, 'listCriteria'):
+        if hasattr(self.topic, 'listCriteria'):
             #old style collection
-            for criterion in self.context.listCriteria():
+            for criterion in self.topic.listCriteria():
                 if criterion.meta_type =='ATSortCriterion':
                     sortname = criterion.getCriteriaItems()[0][1]
                     sortorder = 'asc'
@@ -513,7 +534,7 @@ class JsViewlet(BaseViewlet):
                             sortorder = 'desc'
                     sort = "sortname: '%s', sortorder: '%s'," % (
                                 sortname, sortorder)
-        elif hasattr(self.context, 'getSort_on'):
+        elif hasattr(self.topic, 'getSort_on'):
             #new style collection
             sortname = self.context.getSort_on()
             sortorder = 'asc'
@@ -523,13 +544,14 @@ class JsViewlet(BaseViewlet):
                 sortorder = 'asc'
             sort = "sortname: '%s', sortorder: '%s'," % (
                                 sortname, sortorder)
-        table_name = self.context.Title()
-        url = self.context.absolute_url() + '/@@flexijson_view'
+        table_name = self.topic.Title()
+        url = self.topic.absolute_url() + '/@@flexijson_view'
         try:
-            items_ppage = self.context.getItemCount()
+            #XXX
+            items_ppage = self.topic.getItemCount()
         except AttributeError:
             items_ppage = settings.items_pp
-        add_form_data_js = self.add_form_data_js % self.context.absolute_url()
+        add_form_data_js = self.add_form_data_js % self.topic.absolute_url()
         if items_ppage==0:
             items_ppage = settings.items_pp
         js = self.js_template % {

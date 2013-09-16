@@ -180,9 +180,9 @@ def get_search_results(flexitopic):
     batch_size = form.get('b_size', 20)
     batch_start = form.get('b_start', 0)
     catalog = flexitopic.portal_catalog
-    query = flexitopic.context.buildQuery()
+    query = flexitopic.topic.buildQuery()
     query.pop('sort_order', None)
-    for criterion in flexitopic.context.listCriteria():
+    for criterion in flexitopic.topic.listCriteria():
         if criterion.meta_type in ['ATDateRangeCriterion',
                                     'ATFriendlyDateCriteria']:
             start_date, end_date = get_start_end(flexitopic, criterion, catalog)
@@ -243,7 +243,7 @@ def get_search_results(flexitopic):
             sort_on = sortname
     elif sortname == None:
         #get sort_on/order out of topic
-        for criterion in flexitopic.context.listCriteria():
+        for criterion in flexitopic.topic.listCriteria():
             if criterion.meta_type =='ATSortCriterion':
                 sort_on = criterion.getCriteriaItems()[0][1]
                 if len(criterion.getCriteriaItems())==2 and sortorder==None:

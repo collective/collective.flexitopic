@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.6.2'
+version = '0.7'
 
 setup(name='collective.flexitopic',
       version=version,
@@ -40,4 +40,6 @@ setup(name='collective.flexitopic',
       [z3c.autoinclude.plugin]
       target = plone
       """,
+      #setup_requires=["PasteScript"],
+      #paster_plugins=["ZopeSkel"],
       )

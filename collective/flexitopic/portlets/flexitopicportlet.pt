@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+    lang="en"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="collective.flexitopic"
+    tal:omit-tag="">
+
+<dl class="portlet portletFlexiTopicPortlet"
+    i18n:domain="collective.flexitopic">
+
+    <dt class="portletHeader">
+        <span class="portletTopLeft"></span>
+        <span>
+           Header
+        </span>
+        <span class="portletTopRight"></span>
+    </dt>
+
+    <dd class="portletItem odd">
+        Body text
+        <div tal:replace="structure provider:collective.flexitopic.portletform" />
+        form
+        <div tal:replace="structure provider:collective.flexitopic.portlettable" />
+        table
+        <div tal:replace="structure provider:collective.flexitopic.portletjavascript" />
+        JS
+    </dd>
+
+    <dd class="portletFooter">
+        <span class="portletBottomLeft"></span>
+        <span>
+           Footer
+        </span>
+        <span class="portletBottomRight"></span>
+    </dd>
+
+</dl>
+</html>
