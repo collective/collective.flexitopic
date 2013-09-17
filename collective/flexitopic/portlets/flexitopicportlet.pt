@@ -5,7 +5,23 @@
     i18n:domain="collective.flexitopic"
     tal:omit-tag="">
 
+
+<div tal:condition="view/data/omit_border"
+     tal:attributes="class string:portletFlexitopic ${view/css_class}">
+
+        <div tal:replace="structure provider:collective.flexitopic.portletform" />
+        <div tal:replace="structure provider:collective.flexitopic.portlettable" />
+        <div tal:replace="structure provider:collective.flexitopic.portletjavascript" />
+        <span tal:condition="view/data/show_more">
+           <a tal:attributes="href view/collection_url">
+            <span i18n:domain="plone" i18n:translate="more_url">More&hellip;</span>
+           </a>
+        </span>
+</div>
+
 <dl class="portlet portletFlexiTopicPortlet"
+    tal:condition="not:view/data/omit_border"
+    tal:attributes="class string:portlet portletFlexitopic ${view/css_class}"
     i18n:domain="collective.flexitopic">
 
     <dt class="portletHeader">

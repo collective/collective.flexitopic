@@ -1,12 +1,18 @@
+from AccessControl import getSecurityManager
+
+from zope import schema
+from zope.component import getMultiAdapter, getUtility
+from zope.formlib import form
 from zope.interface import Interface
 from zope.interface import implements
 
-#from plone.app.portlets.portlets import base
-from plone.portlets.interfaces import IPortletDataProvider
-from plone.portlet.collection import collection as base
 from plone.app.form.widgets.uberselectionwidget import UberSelectionWidget
-from zope import schema
-from zope.formlib import form
+from plone.app.portlets.portlets import base
+from plone.app.vocabularies.catalog import SearchableTextSourceBinder
+from plone.i18n.normalizer.interfaces import IIDNormalizer
+from plone.memoize.instance import memoize
+from plone.portlets.interfaces import IPortletDataProvider
+
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from collective.flexitopic import flexitopicMessageFactory as _
@@ -14,7 +20,7 @@ from collective.flexitopic import flexitopicMessageFactory as _
 from zope.i18nmessageid import MessageFactory
 __ = MessageFactory("plone")
 
-class IFlexiTopicPortlet(base.ICollectionPortlet):
+class IFlexiTopicPortlet(IPortletDataProvider):
     """A portlet
 
     It inherits from IPortletDataProvider because for this portlet, the
@@ -27,9 +33,53 @@ class IFlexiTopicPortlet(base.ICollectionPortlet):
     # empty interface - see also notes around the add form and edit form
     # below.
 
-    # some_field = schema.TextLine(title=_(u"Some field"),
-    #                              description=_(u"A field to use"),
-    #                              required=True)
+    header = schema.TextLine(
+        title=__(u"Portlet header"),
+        description=__(u"Title of the rendered portlet"),
+        required=True)
+
+    target_collection = schema.Choice(
+        title=__(u"Target collection"),
+        description=__(u"Find the collection which provides the items to list"),
+        required=True,
+        source=SearchableTextSourceBinder(
+            {'portal_type': ('Topic', 'Collection')},
+            default_query='path:'))
+
+    limit = schema.Int(
+        title=__(u"Limit"),
+        description=__(u"Specify the maximum number of items to show in the "
+                      u"portlet. Leave this blank to show all items."),
+        required=False)
+
+
+    show_more = schema.Bool(
+        title=__(u"Show more... link"),
+        description=__(u"If enabled, a more... link will appear in the footer "
+                      u"of the portlet, linking to the underlying "
+                      u"Collection."),
+        required=True,
+        default=True)
+
+    omit_border = schema.Bool(
+        title=__(u"Omit portlet border"),
+        description=_(u"Tick this box if you want to render the Form and Flexigrid"
+            "without the standard header, border or footer."),
+        required=True,
+        default=False)
+
+    flexitopic_width = schema.Int(title=_(u"Flexitopic width"),
+                                  description=_(u"Width of the flexigrid table"),
+                                  required=False,
+                                  validators=('isInt',)
+                                  default=None)
+
+    flexitopic_height = schema.Int(title=_(u"Flexitopic height"),
+                                  description=_(u"Height of the flexigrid table"),
+                                  required=False,
+                                  validators=('isInt',)
+                                  default=None)
+
 
 
 class Assignment(base.Assignment):
@@ -41,24 +91,35 @@ class Assignment(base.Assignment):
 
     implements(IFlexiTopicPortlet)
 
-    # TODO: Set default values for the configurable parameters here
+    # Set default values for the configurable parameters here
 
-    # some_field = u""
+    header = u""
+    target_collection = None
+    limit = None
+    show_more = True
+    omit_border = False
+    flexitopic_width = None
+    flexitopic_height = None
 
-    # TODO: Add keyword parameters for configurable parameters here
-    # def __init__(self, some_field=u''):
-    #    self.some_field = some_field
 
-    def __init__(self, **kwargs):
-        for name, value in kwargs.items():
-            setattr(self, name, value)
+    def __init__(self, header=u"", target_collection=None, limit=None,
+                 show_more=true, omit_border=False,
+                 flexitopic_width=None, flexitopic_height=None):
+        self.header = header
+        self.target_collection = target_collection
+        self.limit = limit
+        self.show_more = show_more
+        self.omit_border = omit_border
+        self.flexitopic_width = flexitopic_width
+        self.flexitopic_height = flexitopic_height
+
 
     @property
     def title(self):
         """This property is used to give the title of the portlet in the
         "manage portlets" screen.
         """
-        return __(u"FlexiTopic")
+        return _(u"FlexiTopic")
 
 
 class Renderer(base.Renderer):
@@ -69,10 +130,64 @@ class Renderer(base.Renderer):
     of this class. Other methods can be added and referenced in the template.
     """
 
-    _template = ViewPageTemplateFile('flexitopicportlet.pt')
+    render = ViewPageTemplateFile('flexitopicportlet.pt')
 
-    def render(self):
-        return self._template()
+    def css_class(self):
+        """Generate a CSS class from the portlet header
+        """
+        header = self.data.header
+        if header:
+            normalizer = getUtility(IIDNormalizer)
+            return "portlet-flexitopic-%s" % normalizer.normalize(header)
+        return "portlet-flexitopic"
+
+
+    def collection_url(self):
+        collection = self.collection()
+        if collection is None:
+            return None
+        else:
+            return collection.absolute_url()
+
+    @property
+    def available(self):
+        """ do not show if the collection is empty """
+        return len(self.results())
+
+    @memoize
+    def results(self):
+        """ only used to check if the portlet is available"""
+        results = []
+        collection = self.collection()
+        if collection is not None:
+            results = collection.queryCatalog(batch=True, b_size=1)
+        return results
+
+    @memoize
+    def collection(self):
+        collection_path = self.data.target_collection
+        if not collection_path:
+            return None
+
+        if collection_path.startswith('/'):
+            collection_path = collection_path[1:]
+
+        if not collection_path:
+            return None
+
+        portal_state = getMultiAdapter((self.context, self.request),
+                                       name=u'plone_portal_state')
+        portal = portal_state.portal()
+        if isinstance(collection_path, unicode):
+            # restrictedTraverse accepts only strings
+            collection_path = str(collection_path)
+
+        result = portal.unrestrictedTraverse(collection_path, default=None)
+        if result is not None:
+            sm = getSecurityManager()
+            if not sm.checkPermission('View', result):
+                result = None
+        return result
 
 
 # NOTE: If this portlet does not have any configurable parameters, you can
