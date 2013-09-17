@@ -292,13 +292,14 @@ class FormViewlet(BaseViewlet):
 class FormViewletNG(FormViewlet):
     ''' displays the query form for new style collections'''
 
+
     def get_criteria(self):
         ''' combine request with topic criteria '''
         criteria = []
-        query = queryparser.parseFormquery(self.context, self.context.getRawQuery())
+        query = queryparser.parseFormquery(self.context, self.topic.getRawQuery())
         registry = getUtility(IRegistry)
         qsrr = QuerystringRegistryReader(registry)
-        for raw_query in self.context.getRawQuery():
+        for raw_query in self.topic.getRawQuery():
             criterion = qsrr()['indexes'][raw_query['i']]
             input_html = ''
             selected = self.request.get(raw_query['i'],None)
@@ -331,7 +332,7 @@ class FormViewletNG(FormViewlet):
                             value="%s"/>''' % (id,
                                 raw_query['i'], value)
             elif raw_query['o'] in DATERANGE_OPERATORS:
-                start_date, end_date = get_start_end_ng(self.context, query,
+                start_date, end_date = get_start_end_ng(self.topic, query,
                                                 raw_query,
                                                 self.portal_catalog)
                 startval = self.request.get('start-' + raw_query['i'],
@@ -372,9 +373,6 @@ class FormViewletNG(FormViewlet):
             criteria.append(criterion_field)
         return criteria
 
-class FlexigridViewlet(BaseViewlet):
-    ''' displays the flexigrid results'''
-    render = ViewPageTemplateFile("templates/flexigrid.pt")
 
 class ResultTableViewlet(BaseViewlet):
     '''plain html results table '''
@@ -395,7 +393,7 @@ class ResultTableViewlet(BaseViewlet):
     def search_results(self):
         results = get_search_results(self)
         results['fields'] = self.get_table_fields()
-        results['id'] = "topichtmlresults"
+        results['id'] = "flexitopicresults"
         results['display_legend'] = (results['num_results'] > 0)
         return results
 
@@ -404,7 +402,7 @@ class ResultTableViewletNG(ResultTableViewlet):
     def search_results(self):
         results = get_search_results_ng(self)
         results['fields'] = self.get_table_fields()
-        results['id'] = "topichtmlresults"
+        results['id'] = "flexitopicresults"
         results['display_legend'] = (results['num_results'] > 0)
         return results
 
@@ -416,11 +414,24 @@ class JsViewlet(BaseViewlet):
 
     render = ViewPageTemplateFile("templates/jstemplate.pt")
 
+    items_ppage = 0
+    flexitopic_width = 0
+    flexitopic_height = 0
+
     def __init__(self, context, request, view, manager=None):
         super(JsViewlet, self).__init__(context, request, view, manager)
         self.topic = context
         registry = getUtility(IRegistry)
         self.settings = registry.forInterface(IFlexiTopicSettings)
+        self.items_ppage = 0
+        try:
+            self.items_ppage = self.topic.getItemCount()
+        except AttributeError:
+            self.items_ppage = self.settings.items_pp
+        if self.items_ppage==0:
+            items_ppage = self.settings.items_pp
+        self.flexitopic_width = self.settings.flexitopic_width
+        self.flexitopic_height = self.settings.flexitopic_height
 
     js_template = """
  $(document).ready(function() {
@@ -434,8 +445,8 @@ class JsViewlet(BaseViewlet):
          $('#flexitopicresults').flexOptions({newp: 1}).flexReload();
         }) ;
    });
- });
 
+    $("#flexitopicresults").empty()
     $("#flexitopicresults").flexigrid
             (
             {
@@ -455,7 +466,7 @@ class JsViewlet(BaseViewlet):
             height: %(height)i
             }
             );
-
+ });
     function addFormData() {
         var dt = $('#flexitopicsearchform').serializeArray();
         $("#flexitopicresults").flexOptions({params: dt});
@@ -468,8 +479,6 @@ class JsViewlet(BaseViewlet):
                 return false;
             }
     );
-
-
         """
 
     add_form_data_js ='//%s'
@@ -494,8 +503,8 @@ class JsViewlet(BaseViewlet):
             return False
         fields = get_topic_table_fields(self.topic, self.portal_catalog)
 
-        width=self.settings.flexitopic_width
-        height=self.settings.flexitopic_height
+        width=self.flexitopic_width
+        height=self.flexitopic_height
         i_date = 0
         for field in fields:
             if is_date(field['name']):
@@ -546,22 +555,13 @@ class JsViewlet(BaseViewlet):
                                 sortname, sortorder)
         table_name = self.topic.Title()
         url = self.topic.absolute_url() + '/@@flexijson_view'
-        try:
-            #XXX
-            items_ppage = self.topic.getItemCount()
-        except AttributeError:
-            #XXX
-            items_ppage = self.settings.items_pp
         add_form_data_js = self.add_form_data_js % self.topic.absolute_url()
-        if items_ppage==0:
-            #XXX
-            items_ppage = self.settings.items_pp
         js = self.js_template % {
                 'url': url,
                 'col_model': ', '.join(tl),
                 'sort': sort,
                 'title': table_name,
-                'items_ppage': items_ppage,
+                'items_ppage': self.items_ppage,
                 'add_js': add_form_data_js,
                 'width': width,
                 'height': height,

@@ -5,6 +5,7 @@ Changelog
 ----------------
 
 - add flexitopic portlet
+- use one table for flexigrid + search resuts table - no more noscript tag
 
 0.6.2 (2013/09/06)
 -------------------

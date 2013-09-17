@@ -28,10 +28,8 @@ class IFlexiTopicPortlet(IPortletDataProvider):
     same.
     """
 
-    # TODO: Add any zope.schema fields here to capture portlet configuration
-    # information. Alternatively, if there are no settings, leave this as an
-    # empty interface - see also notes around the add form and edit form
-    # below.
+    # Any zope.schema fields here are to capture portlet configuration
+    # information.
 
     header = schema.TextLine(
         title=__(u"Portlet header"),
@@ -71,13 +69,13 @@ class IFlexiTopicPortlet(IPortletDataProvider):
     flexitopic_width = schema.Int(title=_(u"Flexitopic width"),
                                   description=_(u"Width of the flexigrid table"),
                                   required=False,
-                                  validators=('isInt',)
+                                  min=0,
                                   default=None)
 
     flexitopic_height = schema.Int(title=_(u"Flexitopic height"),
                                   description=_(u"Height of the flexigrid table"),
                                   required=False,
-                                  validators=('isInt',)
+                                  min=0,
                                   default=None)
 
 
@@ -103,7 +101,7 @@ class Assignment(base.Assignment):
 
 
     def __init__(self, header=u"", target_collection=None, limit=None,
-                 show_more=true, omit_border=False,
+                 show_more=True, omit_border=False,
                  flexitopic_width=None, flexitopic_height=None):
         self.header = header
         self.target_collection = target_collection
@@ -190,9 +188,6 @@ class Renderer(base.Renderer):
         return result
 
 
-# NOTE: If this portlet does not have any configurable parameters, you can
-# inherit from NullAddForm and remove the form_fields variable.
-
 class AddForm(base.AddForm):
     """Portlet add form.
 
@@ -212,9 +207,6 @@ class AddForm(base.AddForm):
         return Assignment(**data)
 
 
-# NOTE: IF this portlet does not have any configurable parameters, you can
-# remove this class definition and delete the editview attribute from the
-# <plone:portlet /> registration in configure.zcml
 
 class EditForm(base.EditForm):
     """Portlet edit form.

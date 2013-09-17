@@ -11,6 +11,7 @@
 
         <div tal:replace="structure provider:collective.flexitopic.portletform" />
         <div tal:replace="structure provider:collective.flexitopic.portlettable" />
+        <table id="flexitopicresults" style="display:none"> </table>
         <div tal:replace="structure provider:collective.flexitopic.portletjavascript" />
         <span tal:condition="view/data/show_more">
            <a tal:attributes="href view/collection_url">
@@ -37,6 +38,7 @@
     <dd class="portletItem odd">
         <div tal:replace="structure provider:collective.flexitopic.portletform" />
         <div tal:replace="structure provider:collective.flexitopic.portlettable" />
+        <table id="flexitopicresults" style="display:none"> </table>
         <div tal:replace="structure provider:collective.flexitopic.portletjavascript" />
     </dd>
 

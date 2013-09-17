@@ -207,16 +207,6 @@
 
     <browser:viewlet
         view=".interfaces.IFlexiTopicView"
-        name="collective.flexitopic.flexigrid"
-        manager=".interfaces.IFlexiTopicBottom"
-        layer="..interfaces.IFlexiTopicLayer"
-        class=".viewlets.FlexigridViewlet"
-        permission="zope2.View"
-        template="templates/flexigrid.pt"
-        />
-
-    <browser:viewlet
-        view=".interfaces.IFlexiTopicView"
         name="collective.flexitopic.resulttable"
         manager=".interfaces.IFlexiTopicBottom"
         for="Products.ATContentTypes.interfaces.topic.IATTopic"
