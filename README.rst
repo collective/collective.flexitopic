@@ -28,6 +28,9 @@ a form to narrow down your search inside the collection. If the criterion (the
 index in portal_catalog) is sortable you can sort this column. Not all criteria
 types can be used as input for Flexi-collection so beware.
 
+Search Form
+------------
+
 Search Text
   full text search inside the collections. If you leave the
   criterion value empty users can search for content containing that text, if
@@ -58,11 +61,25 @@ The output is always a table with the fields you supplied in the
 is checked or not.
 
 Subtopics (old style collections only)
-  Flexitopic will display subtopics as tabs on top of the page. The first
-  tab is the description of the topic, subtopics will occupy the following
-  tabs. Subtopics will always be displayed as (plain html) tables defined
-  by the criteria,  ``Table Columns`` and the ``Number of Items`` of the
-  subtopic.
+---------------------------------------
+
+Flexitopic will display subtopics as tabs on top of the page. The first
+tab is the description of the topic, subtopics will occupy the following
+tabs. Subtopics will always be displayed as (plain html) tables defined
+by the criteria,  ``Table Columns`` and the ``Number of Items`` of the
+subtopic.
+
+Portlets
+---------
+
+You can display Topics and Collections in a Flexitopic portlet.
+The Portlet is mainly meant to be used with products that let you
+dispay portlets inside the content area such as ContentWellPortlets_
+or PortletPages_ but it may be usefull as a 'real' portlet in edge cases
+as well.
+
+.. _ContentWellPortlets: http://plone.org/products/contentwellportlets
+.. _PortletPages: http://plone.org/products/collective.portletpage
 
 Installation
 ============
