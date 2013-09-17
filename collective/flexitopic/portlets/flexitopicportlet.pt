@@ -11,25 +11,25 @@
     <dt class="portletHeader">
         <span class="portletTopLeft"></span>
         <span>
-           Header
+           <a tal:attributes="href view/collection_url">
+            <span tal:replace="view/data/header">Header</span>
+           </a>
         </span>
         <span class="portletTopRight"></span>
     </dt>
 
     <dd class="portletItem odd">
-        Body text
         <div tal:replace="structure provider:collective.flexitopic.portletform" />
-        form
         <div tal:replace="structure provider:collective.flexitopic.portlettable" />
-        table
         <div tal:replace="structure provider:collective.flexitopic.portletjavascript" />
-        JS
     </dd>
 
     <dd class="portletFooter">
         <span class="portletBottomLeft"></span>
-        <span>
-           Footer
+        <span tal:condition="view/data/show_more">
+           <a tal:attributes="href view/collection_url">
+            <span i18n:domain="plone" i18n:translate="more_url">More&hellip;</span>
+           </a>
         </span>
         <span class="portletBottomRight"></span>
     </dd>
