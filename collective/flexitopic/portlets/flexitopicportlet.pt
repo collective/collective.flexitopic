@@ -1,18 +1,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
     lang="en"
     xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
     i18n:domain="collective.flexitopic"
     tal:omit-tag="">
 
+<div tal:condition="nothing">
+    <metal:block metal:define-macro="displayflexitopic">
+        <div tal:replace="structure provider:collective.flexitopic.portletform"
+            tal:condition="view/is_old_style" />
+        <div tal:replace="structure provider:collective.flexitopic.portlettable"
+            tal:condition="view/is_old_style" />
+        <div tal:replace="structure provider:collective.flexitopic.portletformng"
+            tal:condition="not:view/is_old_style" />
+        <div tal:replace="structure provider:collective.flexitopic.portlettableng"
+            tal:condition="not:view/is_old_style" />
+        <div tal:replace="structure provider:collective.flexitopic.portletjavascript" />
+    </metal:block>
+</div>
 
 <div tal:condition="view/data/omit_border"
      tal:attributes="class string:portletFlexitopic ${view/css_class}">
-
-        <div tal:replace="structure provider:collective.flexitopic.portletform" />
-        <div tal:replace="structure provider:collective.flexitopic.portlettable" />
-        <table id="flexitopicresults" style="display:none"> </table>
-        <div tal:replace="structure provider:collective.flexitopic.portletjavascript" />
+        <div metal:use-macro="template/macros/displayflexitopic" omit-tag="" />
         <span tal:condition="view/data/show_more">
            <a tal:attributes="href view/collection_url">
             <span i18n:domain="plone" i18n:translate="more_url">More&hellip;</span>
@@ -36,10 +46,7 @@
     </dt>
 
     <dd class="portletItem odd">
-        <div tal:replace="structure provider:collective.flexitopic.portletform" />
-        <div tal:replace="structure provider:collective.flexitopic.portlettable" />
-        <table id="flexitopicresults" style="display:none"> </table>
-        <div tal:replace="structure provider:collective.flexitopic.portletjavascript" />
+        <div metal:use-macro="template/macros/displayflexitopic" omit-tag="" />
     </dd>
 
     <dd class="portletFooter">

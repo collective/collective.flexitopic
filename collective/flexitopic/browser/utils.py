@@ -266,9 +266,9 @@ def get_search_results_ng(flexitopic):
     batch_start = form.get('b_start', 0)
     catalog = flexitopic.portal_catalog
     query = queryparser.parseFormquery(flexitopic.context,
-            flexitopic.context.getRawQuery())
+            flexitopic.topic.getRawQuery())
     query.pop('sort_order', None)
-    for raw_query in flexitopic.context.getRawQuery():
+    for raw_query in flexitopic.topic.getRawQuery():
             value = form.get(raw_query['i'], False)
             if value:
                 if (
@@ -304,8 +304,8 @@ def get_search_results_ng(flexitopic):
             sort_on = sortname
     elif sortname == None:
         #get sort_on/order out of topic
-        sort_on = flexitopic.context.getSort_on()
-        if flexitopic.context.getSort_reversed():
+        sort_on = flexitopic.topic.getSort_on()
+        if flexitopic.topic.getSort_reversed():
             sort_order = 'reverse'
     if sort_on:
         query['sort_on'] = sort_on

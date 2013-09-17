@@ -417,22 +417,6 @@ class JsViewlet(BaseViewlet):
     items_ppage = 0
     flexitopic_width = 0
     flexitopic_height = 0
-
-    def __init__(self, context, request, view, manager=None):
-        super(JsViewlet, self).__init__(context, request, view, manager)
-        self.topic = context
-        registry = getUtility(IRegistry)
-        self.settings = registry.forInterface(IFlexiTopicSettings)
-        self.items_ppage = 0
-        try:
-            self.items_ppage = self.topic.getItemCount()
-        except AttributeError:
-            self.items_ppage = self.settings.items_pp
-        if self.items_ppage==0:
-            items_ppage = self.settings.items_pp
-        self.flexitopic_width = self.settings.flexitopic_width
-        self.flexitopic_height = self.settings.flexitopic_height
-
     js_template = """
  $(document).ready(function() {
    $('#flexitopicsearchform').find('select').each(function(i) {
@@ -483,6 +467,20 @@ class JsViewlet(BaseViewlet):
 
     add_form_data_js ='//%s'
 
+    def __init__(self, context, request, view, manager=None):
+        super(JsViewlet, self).__init__(context, request, view, manager)
+        self.topic = context
+        registry = getUtility(IRegistry)
+        self.settings = registry.forInterface(IFlexiTopicSettings)
+        self.items_ppage = 0
+        try:
+            self.items_ppage = self.topic.getItemCount()
+        except AttributeError:
+            self.items_ppage = self.settings.items_pp
+        if self.items_ppage==0:
+            items_ppage = self.settings.items_pp
+        self.flexitopic_width = self.settings.flexitopic_width
+        self.flexitopic_height = self.settings.flexitopic_height
 
     def get_js(self):
         """{display: 'Title', name : 'Title', width : 220, sortable : true, align: 'left'}"""
@@ -545,9 +543,9 @@ class JsViewlet(BaseViewlet):
                                 sortname, sortorder)
         elif hasattr(self.topic, 'getSort_on'):
             #new style collection
-            sortname = self.context.getSort_on()
+            sortname = self.topic.getSort_on()
             sortorder = 'asc'
-            if self.context.getSort_reversed():
+            if self.topic.getSort_reversed():
                 sortorder = 'desc'
             else:
                 sortorder = 'asc'

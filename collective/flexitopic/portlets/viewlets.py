@@ -22,7 +22,7 @@ class FormViewletNG(viewlets.FormViewletNG):
     """ Subclass Formviewlet for (new style) Collections for portlet"""
 
     def __init__(self, context, request, view, manager=None):
-        super(FormViewlet, self).__init__(context, request, view, manager)
+        super(FormViewletNG, self).__init__(context, request, view, manager)
         self.topic = self.view.collection()
 
     def get_view_name(self):
@@ -42,7 +42,7 @@ class ResultTableViewletNG(viewlets.ResultTableViewletNG):
     """ Result table for (new style collections"""
 
     def __init__(self, context, request, view, manager=None):
-        super(ResultTableViewlet, self).__init__(context, request, view, manager)
+        super(ResultTableViewletNG, self).__init__(context, request, view, manager)
         self.topic = self.view.collection()
 
 

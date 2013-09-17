@@ -187,6 +187,8 @@ class Renderer(base.Renderer):
                 result = None
         return result
 
+    def is_old_style(self):
+        return self.collection().portal_type == "Topic"
 
 class AddForm(base.AddForm):
     """Portlet add form.
