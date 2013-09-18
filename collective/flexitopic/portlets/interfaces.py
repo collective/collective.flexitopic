@@ -6,6 +6,9 @@ from zope.viewlet.interfaces import IViewletManager
 class IFlexiTopicForm(IViewletManager):
     ''' Render the seach form for old style topics'''
 
+class IFlexiTopicMap(IViewletManager):
+    ''' placeholder for map for collective.geo.flexitopic'''
+
 class IFlexiTopicTable(IViewletManager):
     ''' The botom of a flexitopic page
        (the results table for old style topics)

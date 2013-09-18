@@ -92,7 +92,7 @@ def get_start_end(flexitopic, criterion, catalog):
         date_base = criterion.getCriteriaItems()[0][1]['query']
         if date_base==None:
             date_base = DateTime()
-        date_limit = get_date_limit(flexitopic.context, criterion,
+        date_limit = get_date_limit(flexitopic.topic, criterion,
                                     catalog)
         start_date = min(date_base, date_limit)
         end_date =  max(date_base, date_limit)

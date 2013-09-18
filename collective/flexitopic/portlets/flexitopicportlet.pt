@@ -8,6 +8,7 @@
 
 <div tal:condition="nothing">
     <metal:block metal:define-macro="displayflexitopic">
+        <div tal:replace="structure provider:collective.flexitopic.portletmap" />
         <div tal:replace="structure provider:collective.flexitopic.portletform"
             tal:condition="view/is_old_style" />
         <div tal:replace="structure provider:collective.flexitopic.portlettable"

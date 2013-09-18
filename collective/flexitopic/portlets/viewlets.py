@@ -1,7 +1,4 @@
 import logging
-
-from plone.registry.interfaces import IRegistry
-from collective.flexitopic.interfaces import IFlexiTopicSettings
 from collective.flexitopic.browser import viewlets
 
 logger = logging.getLogger(__name__)

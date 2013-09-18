@@ -477,8 +477,11 @@ class JsViewlet(BaseViewlet):
             self.items_ppage = self.topic.getItemCount()
         except AttributeError:
             self.items_ppage = self.settings.items_pp
-        if self.items_ppage==0:
-            items_ppage = self.settings.items_pp
+        if not self.items_ppage:
+            if self.settings.items_ppage:
+                items_ppage = self.settings.items_pp
+            else:
+                items_ppage = 10
         self.flexitopic_width = self.settings.flexitopic_width
         self.flexitopic_height = self.settings.flexitopic_height
 

@@ -121,4 +121,12 @@
         />
 
 
+    <browser:viewletManager
+        name="collective.flexitopic.portletmap"
+        provides=".interfaces.IFlexiTopicMap"
+        permission="zope2.View"
+        class="plone.app.viewletmanager.manager.OrderedViewletManager"
+        />
+
+
 </configure>

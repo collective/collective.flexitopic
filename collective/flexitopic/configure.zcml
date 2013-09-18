@@ -57,7 +57,7 @@
   <include package=".browser" />
   <include package="plone.app.registry" />
 
-  <!--i18n:registerTranslations directory="locales" /-->
+  <i18n:registerTranslations directory="locales" />
 
 
   <!-- File System Directory Views registration -->
