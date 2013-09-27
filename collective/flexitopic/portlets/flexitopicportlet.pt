@@ -9,14 +9,18 @@
 <div tal:condition="nothing">
     <metal:block metal:define-macro="displayflexitopic">
         <div tal:replace="structure provider:collective.flexitopic.portletmap" />
-        <div tal:replace="structure provider:collective.flexitopic.portletform"
-            tal:condition="view/is_old_style" />
-        <div tal:replace="structure provider:collective.flexitopic.portlettable"
-            tal:condition="view/is_old_style" />
-        <div tal:replace="structure provider:collective.flexitopic.portletformng"
-            tal:condition="not:view/is_old_style" />
-        <div tal:replace="structure provider:collective.flexitopic.portlettableng"
-            tal:condition="not:view/is_old_style" />
+        <div tal:condition="view/show_form" tal:omit-tag="">
+            <div tal:replace="structure provider:collective.flexitopic.portletform"
+                tal:condition="view/is_old_style" />
+            <div tal:replace="structure provider:collective.flexitopic.portletformng"
+                tal:condition="not:view/is_old_style" />
+        </div>
+        <div tal:condition="view/show_table" tal:omit-tag="">
+            <div tal:replace="structure provider:collective.flexitopic.portlettable"
+                tal:condition="view/is_old_style" />
+            <div tal:replace="structure provider:collective.flexitopic.portlettableng"
+                tal:condition="not:view/is_old_style" />
+        </div>
         <div tal:replace="structure provider:collective.flexitopic.portletjavascript" />
     </metal:block>
 </div>

@@ -78,6 +78,11 @@ class IFlexiTopicPortlet(IPortletDataProvider):
                                   min=0,
                                   default=None)
 
+    show_form = schema.Bool(title=_("Show search form"),
+                description=_(u"Uncheck if you want to hide the searchform"),
+                required=False,
+                default=True,)
+
 
 
 class Assignment(base.Assignment):
@@ -98,11 +103,12 @@ class Assignment(base.Assignment):
     omit_border = False
     flexitopic_width = None
     flexitopic_height = None
-
+    show_form = True
 
     def __init__(self, header=u"", target_collection=None, limit=None,
                  show_more=True, omit_border=False,
-                 flexitopic_width=None, flexitopic_height=None):
+                 flexitopic_width=None, flexitopic_height=None
+                 show_form = True):
         self.header = header
         self.target_collection = target_collection
         self.limit = limit
@@ -110,6 +116,8 @@ class Assignment(base.Assignment):
         self.omit_border = omit_border
         self.flexitopic_width = flexitopic_width
         self.flexitopic_height = flexitopic_height
+        self.show_form = show_form
+
 
 
     @property
@@ -189,6 +197,15 @@ class Renderer(base.Renderer):
 
     def is_old_style(self):
         return self.collection().portal_type == "Topic"
+
+    def show_table(self):
+        return True
+
+    def show_form(self):
+        return self.data.show_form
+
+
+
 
 class AddForm(base.AddForm):
     """Portlet add form.
