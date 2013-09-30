@@ -107,7 +107,7 @@ class Assignment(base.Assignment):
 
     def __init__(self, header=u"", target_collection=None, limit=None,
                  show_more=True, omit_border=False,
-                 flexitopic_width=None, flexitopic_height=None
+                 flexitopic_width=None, flexitopic_height=None,
                  show_form = True):
         self.header = header
         self.target_collection = target_collection

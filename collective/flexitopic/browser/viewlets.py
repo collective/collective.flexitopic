@@ -478,7 +478,7 @@ class JsViewlet(BaseViewlet):
         except AttributeError:
             self.items_ppage = self.settings.items_pp
         if not self.items_ppage:
-            if self.settings.items_ppage:
+            if self.settings.items_pp:
                 items_ppage = self.settings.items_pp
             else:
                 items_ppage = 10
