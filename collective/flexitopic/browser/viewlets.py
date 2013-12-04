@@ -479,9 +479,9 @@ class JsViewlet(BaseViewlet):
             self.items_ppage = self.settings.items_pp
         if not self.items_ppage:
             if self.settings.items_pp:
-                items_ppage = self.settings.items_pp
+                self.items_ppage = self.settings.items_pp
             else:
-                items_ppage = 10
+                self.items_ppage = 10
         self.flexitopic_width = self.settings.flexitopic_width
         self.flexitopic_height = self.settings.flexitopic_height
 
