@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.7.1 (2014/08/25)
+------------------
+
+- update to latest flexigrid javascript [jean]
+
 0.7 (2013/12/04)
 ----------------
 
