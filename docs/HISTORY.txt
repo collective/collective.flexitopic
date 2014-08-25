@@ -15,7 +15,7 @@ Changelog
 0.6.2 (2013/09/06)
 -------------------
 
--  use UID instead of getId for a cells id (fixes cell misalignments)
+- use UID instead of getId for a cells id (fixes cell misalignments)
 
 0.6.1 (2013/09/05)
 -------------------
@@ -39,8 +39,8 @@ Changelog
 - support for plone.app.collection
 - add caching
 
-0.4 (20011/12/06)
-------------------
+0.4 (2011/12/06)
+----------------
 
 - make date columns smaller
 - remove minimize button from table
